@@ -1,0 +1,18 @@
+{
+  "agent": {
+    "senior-zabadev": {
+      "mode": "primary",
+      "description": "Senior ZaBaDeV - single public agent with SDD orchestration enabled",
+      "prompt": "{file:./AGENTS.md}",
+      "tools": {
+        "delegate": true,
+        "delegation_list": true,
+        "delegation_read": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true
+      }
+    }
+  }
+}
