@@ -44,8 +44,13 @@ func TestListBackupsNewestFirst(t *testing.T) {
 
 	// Temporarily override home dir resolution for ListBackups.
 	origHomeDir := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHomeDir) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHomeDir)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	manifests := ListBackups()
 
@@ -86,8 +91,13 @@ func TestListBackupsWithSourceMetadata(t *testing.T) {
 	}
 
 	origHome := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHome)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	manifests := ListBackups()
 
@@ -110,8 +120,13 @@ func TestListBackupsWithSourceMetadata(t *testing.T) {
 func TestRunArgsRestoreListIsDispatched(t *testing.T) {
 	home := t.TempDir()
 	origHome := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHome)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	var buf bytes.Buffer
 	err := RunArgs([]string{"restore", "--list"}, &buf)
@@ -165,8 +180,13 @@ func TestRunArgsRestoreByIDWithYes(t *testing.T) {
 	}
 
 	origHome := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHome)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	var buf bytes.Buffer
 	err := RunArgs([]string{"restore", "test-backup-001", "--yes"}, &buf)
@@ -185,8 +205,13 @@ func TestRunArgsRestoreByIDWithYes(t *testing.T) {
 func TestRunArgsRestoreUnknownIDReturnsError(t *testing.T) {
 	home := t.TempDir()
 	origHome := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHome)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	var buf bytes.Buffer
 	err := RunArgs([]string{"restore", "no-such-backup", "--yes"}, &buf)
@@ -224,8 +249,13 @@ func TestListBackupsFallsBackGracefullyForOldManifests(t *testing.T) {
 	}
 
 	origHome := os.Getenv("HOME")
-	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+	origUserProfile := os.Getenv("USERPROFILE")
+	t.Cleanup(func() {
+		os.Setenv("HOME", origHome)
+		os.Setenv("USERPROFILE", origUserProfile)
+	})
 	os.Setenv("HOME", home)
+	os.Setenv("USERPROFILE", home)
 
 	manifests := ListBackups()
 

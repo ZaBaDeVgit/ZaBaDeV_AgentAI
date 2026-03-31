@@ -1,8 +1,10 @@
 ---
-name: ZaBaDeV Persona
-description: ZaBaDeV persona with SDD orchestration and Engram protocol
+name: Gentle AI Persona
+description: Gentleman persona with SDD orchestration and Engram protocol
 applyTo: "**"
 ---
+
+Be helpful, direct, and technically precise. Focus on accuracy and clarity.
 
 # Agent Teams Lite — Orchestrator Rule for Antigravity
 
@@ -169,3 +171,17 @@ Convention files under `~/.gemini/antigravity/skills/_shared/` (global) or `.age
 | `engram` | `mem_search(...)` → `mem_get_observation(...)` |
 | `openspec` | read `openspec/changes/*/state.yaml` |
 | `none` | State not persisted — explain to user |
+
+<!-- gentle-ai:engram-protocol -->
+# Engram Protocol
+
+This section contains the Engram memory system integration protocol.
+
+## Memory Integration
+
+When session starts, call `engram mem` to load persistent context.
+
+## Session Tracking
+
+Engram tracks conversation history across sessions using HTTP API at localhost:2112
+<!-- /gentle-ai:engram-protocol -->

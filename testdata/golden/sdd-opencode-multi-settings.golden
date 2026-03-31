@@ -60,26 +60,6 @@
         "write": true
       }
     },
-    "senior-zabadev": {
-      "description": "Senior ZaBaDeV - primary orchestrator agent with hidden SDD sub-agents",
-      "mode": "primary",
-      "permission": {
-        "task": {
-          "*": "deny",
-          "sdd-*": "allow"
-        }
-      },
-      "prompt": "{file:./AGENTS.md}",
-      "tools": {
-        "bash": true,
-        "delegate": true,
-        "delegation_list": true,
-        "delegation_read": true,
-        "edit": true,
-        "read": true,
-        "write": true
-      }
-    },
     "sdd-propose": {
       "description": "Create change proposals from explorations",
       "hidden": true,
@@ -123,6 +103,26 @@
       "prompt": "You are an SDD sub-agent for the verify phase. Read your skill file at ~/.config/opencode/skills/sdd-verify/SKILL.md and follow its instructions. It includes a Step 1 for loading the skill registry — do NOT skip it.",
       "tools": {
         "bash": true,
+        "edit": true,
+        "read": true,
+        "write": true
+      }
+    },
+    "senior-zabadev": {
+      "description": "Senior ZaBaDeV - primary orchestrator agent with hidden SDD sub-agents",
+      "mode": "primary",
+      "permission": {
+        "task": {
+          "*": "deny",
+          "sdd-*": "allow"
+        }
+      },
+      "prompt": "{file:./AGENTS.md}",
+      "tools": {
+        "bash": true,
+        "delegate": true,
+        "delegation_list": true,
+        "delegation_read": true,
         "edit": true,
         "read": true,
         "write": true
