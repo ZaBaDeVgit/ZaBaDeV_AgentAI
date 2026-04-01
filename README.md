@@ -13,7 +13,7 @@
 
 <h1>Senior ZaBaDeV — AI Agent Ecosystem</h1>
 
-<p><strong>One command. OpenCode fully configured with the complete ZaBaDeV ecosystem.</strong></p>
+<p><strong>One command. OpenCode fully configured with the complete ZaBaDeV ecosystem Full.</strong></p>
 
 <p>
 <a href="https://github.com/zabadev/agent-ai/releases"><img src="https://img.shields.io/github/v/release/zabadev/agent-ai" alt="Release"></a>
@@ -48,16 +48,16 @@
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **One-Click Setup** | Single command installs the complete ecosystem |
-| **Cross-Platform** | Works on macOS, Linux, and Windows |
-| **Multi-Agent Support** | OpenCode, Claude Code, Cursor, Gemini CLI, VSCode |
-| **Persistent Learning** | Remembers your preferences and project patterns |
-| **Spec-Driven Development** | Structured planning and implementation workflow |
-| **Automated Code Review** | GGA checks code quality on every commit |
-| **Context7 Integration** | Real-time documentation and examples |
-| **Extensible Skills** | Modular skills system for custom workflows |
+| Feature                     | Description                                       |
+| --------------------------- | ------------------------------------------------- |
+| **One-Click Setup**         | Single command installs the complete ecosystem    |
+| **Cross-Platform**          | Works on macOS, Linux, and Windows                |
+| **Multi-Agent Support**     | OpenCode, Claude Code, Cursor, Gemini CLI, VSCode |
+| **Persistent Learning**     | Remembers your preferences and project patterns   |
+| **Spec-Driven Development** | Structured planning and implementation workflow   |
+| **Automated Code Review**   | GGA checks code quality on every commit           |
+| **Context7 Integration**    | Real-time documentation and examples              |
+| **Extensible Skills**       | Modular skills system for custom workflows        |
 
 ---
 
@@ -355,15 +355,15 @@ zabadev version
 
 Cuando ejecutas `zabadev`, se instala en tu agente de IA:
 
-| Componente | Descripcion |
-|------------|-------------|
-| **Engram** | Sistema de memoria persistente |
+| Componente       | Descripcion                      |
+| ---------------- | -------------------------------- |
+| **Engram**       | Sistema de memoria persistente   |
 | **SDD Workflow** | Spec-Driven Development completo |
-| **Skills** | 11+ skills profesionales |
-| **Context7** | Servidor MCP para documentacion |
-| **GGA** | Automatizacion de agente global |
-| **Permisos** | Configuracion security-first |
-| **Persona** | Senior ZaBaDeV modo ensenanza |
+| **Skills**       | 11+ skills profesionales         |
+| **Context7**     | Servidor MCP para documentacion  |
+| **GGA**          | Automatizacion de agente global  |
+| **Permisos**     | Configuracion security-first     |
+| **Persona**      | Senior ZaBaDeV modo ensenanza    |
 
 ---
 
@@ -416,11 +416,11 @@ RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 
 ## Relación con Gentleman.Dots
 
-| | Gentleman.Dots | ZaBaDeV |
-|--|---------------|---------|
-| **Proposito** | Entorno de desarrollo (editores, shells, terminales) | Capa de desarrollo IA (agentes, memoria, skills) |
-| **Instala** | Neovim, Fish/Zsh, Tmux/Zellij, Ghostty | Configura Claude Code, OpenCode, Gemini CLI, Cursor |
-| **Superposicion** | Ninguna — complementario | Ninguna — diferente capa |
+|                   | Gentleman.Dots                                       | ZaBaDeV                                             |
+| ----------------- | ---------------------------------------------------- | --------------------------------------------------- |
+| **Proposito**     | Entorno de desarrollo (editores, shells, terminales) | Capa de desarrollo IA (agentes, memoria, skills)    |
+| **Instala**       | Neovim, Fish/Zsh, Tmux/Zellij, Ghostty               | Configura Claude Code, OpenCode, Gemini CLI, Cursor |
+| **Superposicion** | Ninguna — complementario                             | Ninguna — diferente capa                            |
 
 Instala Gentleman.Dots primero para tu entorno de desarrollo, luego ZaBaDeV para la capa de IA.
 
