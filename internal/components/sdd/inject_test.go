@@ -480,12 +480,12 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 	}
 
 	// Verify sub-agents have mode "subagent".
-	applyRaw, _ := agentMap["sdd-apply"]
+	applyRaw := agentMap["sdd-apply"]
 	applyAgent, ok := applyRaw.(map[string]any)
 	if !ok {
 		t.Fatalf("sdd-apply has unexpected type: %T", applyRaw)
 	}
-	if mode, _ := applyAgent["mode"].(string); mode != "subagent" {
+	if mode := applyAgent["mode"]; mode != "subagent" {
 		t.Fatalf("sdd-apply mode = %q, want %q", mode, "subagent")
 	}
 
