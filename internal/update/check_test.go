@@ -153,7 +153,7 @@ func TestFetchLatestRelease(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(tc.status)
-				json.NewEncoder(w).Encode(tc.body)
+				_ = json.NewEncoder(w).Encode(tc.body)
 			}))
 			defer server.Close()
 
@@ -222,7 +222,7 @@ func TestFetchLatestRelease_GithubToken(t *testing.T) {
 		gotAuth = r.Header.Get("Authorization")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
 	}))
 	defer server.Close()
 
@@ -262,7 +262,7 @@ func TestCheckAll(t *testing.T) {
 		case contains(path, "gentleman-guardian-angel"):
 			release = githubRelease{TagName: "v2.0.0", HTMLURL: "https://github.com/Gentleman-Programming/gentleman-guardian-angel/releases/tag/v2.0.0"}
 		}
-		json.NewEncoder(w).Encode(release)
+		_ = json.NewEncoder(w).Encode(release)
 	}))
 	defer server.Close()
 
@@ -605,7 +605,7 @@ func TestCheckAll_DevVersion(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
 	}))
 	defer server.Close()
 
@@ -652,7 +652,7 @@ func TestCheckFiltered_SubsetOfTools(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0", HTMLURL: "https://github.com/example/repo/releases/tag/v1.0.0"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0", HTMLURL: "https://github.com/example/repo/releases/tag/v1.0.0"})
 	}))
 	defer server.Close()
 
@@ -697,7 +697,7 @@ func TestCheckFiltered_EmptyFilter(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
 	}))
 	defer server.Close()
 
@@ -730,7 +730,7 @@ func TestCheckFiltered_UnknownToolIgnored(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v1.0.0"})
 	}))
 	defer server.Close()
 
@@ -767,7 +767,7 @@ func TestCheckFiltered_DevBuildSemanticsForGentleAI(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(githubRelease{TagName: "v9.9.9"})
+		_ = json.NewEncoder(w).Encode(githubRelease{TagName: "v9.9.9"})
 	}))
 	defer server.Close()
 
@@ -823,7 +823,7 @@ func TestCheckFiltered_DevBuildSkipNotEligible(t *testing.T) {
 		default:
 			release = githubRelease{TagName: "v1.0.0"}
 		}
-		json.NewEncoder(w).Encode(release)
+		_ = json.NewEncoder(w).Encode(release)
 	}))
 	defer server.Close()
 
@@ -891,7 +891,7 @@ func TestNoUpdatesPath(t *testing.T) {
 		default:
 			release = githubRelease{TagName: "v1.0.0"}
 		}
-		json.NewEncoder(w).Encode(release)
+		_ = json.NewEncoder(w).Encode(release)
 	}))
 	defer server.Close()
 

@@ -10,9 +10,6 @@ import (
 
 	"github.com/zabadev/agent-ai/internal/backup"
 	"github.com/zabadev/agent-ai/internal/cli"
-	"github.com/zabadev/agent-ai/internal/model"
-	"github.com/zabadev/agent-ai/internal/pipeline"
-	"github.com/zabadev/agent-ai/internal/planner"
 	"github.com/zabadev/agent-ai/internal/system"
 	"github.com/zabadev/agent-ai/internal/update"
 	"github.com/zabadev/agent-ai/internal/update/upgrade"
@@ -133,43 +130,6 @@ func runUpgrade(ctx context.Context, args []string, detection system.DetectionRe
 	}
 
 	return nil
-}
-
-// tuiExecute creates a real install runtime and runs the pipeline with progress reporting.
-func tuiExecute(
-	selection model.Selection,
-	resolved planner.ResolvedPlan,
-	detection system.DetectionResult,
-	onProgress pipeline.ProgressFunc,
-) pipeline.ExecutionResult {
-	restoreCommandOutput := cli.SetCommandOutputStreaming(false)
-	defer restoreCommandOutput()
-
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return pipeline.ExecutionResult{Err: fmt.Errorf("resolve user home directory: %w", err)}
-	}
-
-	profile := cli.ResolveInstallProfile(detection)
-	resolved.PlatformDecision = planner.PlatformDecisionFromProfile(profile)
-
-	stagePlan, err := cli.BuildRealStagePlan(homeDir, selection, resolved, profile)
-	if err != nil {
-		return pipeline.ExecutionResult{Err: fmt.Errorf("build stage plan: %w", err)}
-	}
-
-	orchestrator := pipeline.NewOrchestrator(
-		pipeline.DefaultRollbackPolicy(),
-		pipeline.WithFailurePolicy(pipeline.ContinueOnError),
-		pipeline.WithProgressFunc(onProgress),
-	)
-
-	return orchestrator.Execute(stagePlan)
-}
-
-// tuiRestore restores a backup from its manifest.
-func tuiRestore(manifest backup.Manifest) error {
-	return backup.RestoreService{}.Restore(manifest)
 }
 
 // ListBackups returns all backup manifests from the backup directory.

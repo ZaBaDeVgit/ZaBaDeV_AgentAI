@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -143,7 +142,7 @@ func TestDownloadAndExtract(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.WriteHeader(http.StatusOK)
-		w.Write(tarContent)
+		_, _ = w.Write(tarContent)
 	}))
 	defer server.Close()
 
@@ -280,8 +279,8 @@ func TestFindBinaryInTar(t *testing.T) {
 	}
 
 	for _, e := range entries {
-		tw.WriteHeader(&tar.Header{Name: e.name, Mode: 0o644, Size: int64(len(e.content))})
-		tw.Write(e.content)
+		_ = tw.WriteHeader(&tar.Header{Name: e.name, Mode: 0o644, Size: int64(len(e.content))})
+		_, _ = tw.Write(e.content)
 	}
 	tw.Close()
 	gw.Close()
@@ -293,7 +292,7 @@ func TestFindBinaryInTar(t *testing.T) {
 	// Use an httptest server to serve the tar.
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write(tarContent)
+		_, _ = w.Write(tarContent)
 	}))
 	defer server.Close()
 
@@ -324,11 +323,6 @@ func containsSubstr(s, sub string) bool {
 		return false
 	}()
 }
-
-// dummyReadCloser wraps a reader for test use.
-type dummyReadCloser struct{ io.Reader }
-
-func (d dummyReadCloser) Close() error { return nil }
 
 // Suppress unused import warnings in case fmt is needed.
 var _ = fmt.Sprintf

@@ -2,7 +2,6 @@ package app
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -227,7 +226,6 @@ func TestRunArgsRestoreUnknownIDReturnsError(t *testing.T) {
 // without Source/Description are still returned (not skipped) and can be displayed
 // via DisplayLabel without panicking.
 func TestListBackupsFallsBackGracefullyForOldManifests(t *testing.T) {
-	_ = fmt.Sprintf // Ensure fmt is used.
 	home := t.TempDir()
 	backupRoot := filepath.Join(home, ".gentle-ai", "backups")
 

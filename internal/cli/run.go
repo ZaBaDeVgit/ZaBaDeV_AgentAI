@@ -319,7 +319,6 @@ func (s prepareBackupStep) Run() error {
 		if err := backup.WriteManifest(manifestPath, manifest); err != nil {
 			// Non-fatal: metadata annotation failed but the snapshot is intact.
 			// The backup is still usable — restore will work. We just lose the label.
-			_ = err
 		}
 	}
 
