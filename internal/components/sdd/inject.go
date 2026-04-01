@@ -1,6 +1,7 @@
 package sdd
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -344,6 +345,44 @@ type mergeJSONResult struct {
 	merged []byte
 }
 
+// jsonEqual compares two JSON objects semantically (ignoring key order).
+func jsonEqual(a, b map[string]any) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for k, va := range a {
+		vb, ok := b[k]
+		if !ok {
+			return false
+		}
+		if !jsonValueEqual(va, vb) {
+			return false
+		}
+	}
+	return true
+}
+
+func jsonValueEqual(a, b any) bool {
+	switch a := a.(type) {
+	case map[string]any:
+		bm, ok := b.(map[string]any)
+		return ok && jsonEqual(a, bm)
+	case []any:
+		bl, ok := b.([]any)
+		if !ok || len(a) != len(bl) {
+			return false
+		}
+		for i := range a {
+			if !jsonValueEqual(a[i], bl[i]) {
+				return false
+			}
+		}
+		return true
+	default:
+		return a == b
+	}
+}
+
 func mergeJSONFile(path string, overlay []byte) (mergeJSONResult, error) {
 	baseJSON, err := os.ReadFile(path)
 	if err != nil {
@@ -353,14 +392,33 @@ func mergeJSONFile(path string, overlay []byte) (mergeJSONResult, error) {
 		baseJSON = nil
 	}
 
-	baseJSON, err = migrateLegacyOpenCodeAgentsKey(baseJSON)
+	migrated, err := migrateLegacyOpenCodeAgentsKey(baseJSON)
 	if err != nil {
 		return mergeJSONResult{}, fmt.Errorf("migrate opencode agents key: %w", err)
+	}
+
+	// If migration changed the content, write it back so subsequent runs see stable input.
+	if len(migrated) > 0 && len(baseJSON) > 0 && !bytes.Equal(migrated, baseJSON) {
+		_, _ = filemerge.WriteFileAtomic(path, migrated, 0o644)
+		baseJSON = migrated
 	}
 
 	merged, err := filemerge.MergeJSONObjects(baseJSON, overlay)
 	if err != nil {
 		return mergeJSONResult{}, err
+	}
+
+	// Compare merged result with existing file semantically to avoid
+	// false-positive Changed when re-marshaling produces different key order
+	// (Go maps have randomized iteration order).
+	existing, readErr := os.ReadFile(path)
+	if readErr == nil {
+		var existingObj, mergedObj map[string]any
+		if json.Unmarshal(bytes.TrimSpace(existing), &existingObj) == nil &&
+			json.Unmarshal(bytes.TrimSpace(merged), &mergedObj) == nil &&
+			jsonEqual(existingObj, mergedObj) {
+			return mergeJSONResult{writeResult: filemerge.WriteResult{}, merged: merged}, nil
+		}
 	}
 
 	writeResult, err := filemerge.WriteFileAtomic(path, merged, 0o644)
