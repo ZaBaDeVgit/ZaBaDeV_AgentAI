@@ -1,5 +1,5 @@
 # Binaries
-/gentle-ai
+/bin/
 *.exe
 *.dll
 *.so
@@ -24,6 +24,14 @@ Thumbs.db
 
 # Docker
 *.tar
+
+# Screenshots and images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+
 # Pinokio terminal-generated files
 /.pinokio-terminal.json
 /.pinokio/skills/active.md

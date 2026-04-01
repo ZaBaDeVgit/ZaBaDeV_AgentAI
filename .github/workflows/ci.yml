@@ -56,7 +56,7 @@ jobs:
       run: make build
 
     - name: Test build
-      run: ./bin/gentle-ai version
+      run: ./bin/zabadev version
 
   lint:
     runs-on: ubuntu-latest
