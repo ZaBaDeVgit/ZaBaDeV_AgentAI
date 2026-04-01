@@ -1,9 +1,9 @@
 .PHONY: all build test lint clean install dev run
 
 # Variables
-BINARY_NAME=gentle-ai
+BINARY_NAME=zabadev
 GO_VERSION=1.21
-MAIN_PACKAGE=./cmd/gentle-ai
+MAIN_PACKAGE=./cmd/zabadev
 
 # Default target
 all: clean lint test build
