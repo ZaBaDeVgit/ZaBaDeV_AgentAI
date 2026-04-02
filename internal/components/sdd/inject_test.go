@@ -144,7 +144,7 @@ func TestInjectOpenCodeWritesCommandFiles(t *testing.T) {
 	}
 
 	sharedPath := filepath.Join(home, ".config", "opencode", "skills", "_shared", "persistence-contract.md")
-	if _, err := os.Stat(sharedPath); err != nil {
+	if _, err = os.Stat(sharedPath); err != nil {
 		t.Fatalf("expected shared SDD convention file %q: %v", sharedPath, err)
 	}
 
@@ -427,13 +427,14 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 	}
 
 	settingsPath := filepath.Join(home, ".config", "opencode", "opencode.json")
-	content, err := os.ReadFile(settingsPath)
+	var content []byte
+	content, err = os.ReadFile(settingsPath)
 	if err != nil {
 		t.Fatalf("ReadFile(opencode.json) error = %v", err)
 	}
 
 	root := map[string]any{}
-	if err := json.Unmarshal(content, &root); err != nil {
+	if err = json.Unmarshal(content, &root); err != nil {
 		t.Fatalf("Unmarshal(opencode.json) error = %v", err)
 	}
 
@@ -465,8 +466,9 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 	if !ok {
 		t.Fatalf("senior-zabadev tools has unexpected type: %T", orchestratorAgent["tools"])
 	}
+	var value bool
 	for _, toolName := range []string{"delegate", "delegation_read", "delegation_list"} {
-		value, ok := toolsRaw[toolName].(bool)
+		value, ok = toolsRaw[toolName].(bool)
 		if !ok || !value {
 			t.Fatalf("senior-zabadev missing multi-mode tool %q", toolName)
 		}
@@ -474,18 +476,20 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 
 	// Verify representative sub-agents are present.
 	for _, subAgent := range []string{"sdd-init", "sdd-apply", "sdd-verify", "sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks", "sdd-archive"} {
-		if _, ok := agentMap[subAgent]; !ok {
+		if _, ok = agentMap[subAgent]; !ok {
 			t.Fatalf("missing sub-agent %q", subAgent)
 		}
 	}
 
 	// Verify sub-agents have mode "subagent".
 	applyRaw := agentMap["sdd-apply"]
-	applyAgent, ok := applyRaw.(map[string]any)
+	var applyAgent map[string]any
+	applyAgent, ok = applyRaw.(map[string]any)
 	if !ok {
 		t.Fatalf("sdd-apply has unexpected type: %T", applyRaw)
 	}
-	if mode, ok := applyAgent["mode"].(string); !ok || mode != "subagent" {
+	var mode string
+	if mode, ok = applyAgent["mode"].(string); !ok || mode != "subagent" {
 		t.Fatalf("sdd-apply mode = %q, want %q", mode, "subagent")
 	}
 

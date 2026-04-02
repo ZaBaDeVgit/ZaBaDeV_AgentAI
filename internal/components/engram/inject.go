@@ -255,7 +255,7 @@ func buildSeparateMCPContent(mcpPath string, defaultContent []byte) []byte {
 	}
 
 	var existing map[string]any
-	if err := json.Unmarshal(raw, &existing); err != nil {
+	if err = json.Unmarshal(raw, &existing); err != nil {
 		// Malformed JSON — use the default.
 		return defaultContent
 	}

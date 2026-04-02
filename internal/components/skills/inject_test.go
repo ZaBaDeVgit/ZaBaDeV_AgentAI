@@ -33,7 +33,7 @@ func TestInjectWritesSkillFilesForOpenCode(t *testing.T) {
 	}
 
 	path := filepath.Join(home, ".config", "opencode", "skills", "skill-creator", "SKILL.md")
-	if _, err := os.Stat(path); err != nil {
+	if _, err = os.Stat(path); err != nil {
 		t.Fatalf("expected skill file %q: %v", path, err)
 	}
 

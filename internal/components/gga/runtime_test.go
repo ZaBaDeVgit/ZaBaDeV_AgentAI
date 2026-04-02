@@ -83,7 +83,7 @@ func TestEnsureRuntimeAssetsIsNoOpWhenContentMatches(t *testing.T) {
 	}
 
 	// Second call — should be a no-op because content matches.
-	if err := EnsureRuntimeAssets(home); err != nil {
+	if err = EnsureRuntimeAssets(home); err != nil {
 		t.Fatalf("second EnsureRuntimeAssets() error = %v", err)
 	}
 

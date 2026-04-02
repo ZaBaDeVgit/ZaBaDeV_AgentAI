@@ -43,7 +43,7 @@ func TestInjectOpenCodeIsIdempotent(t *testing.T) {
 	}
 
 	path := filepath.Join(home, ".config", "opencode", "opencode.json")
-	if _, err := os.Stat(path); err != nil {
+	if _, err = os.Stat(path); err != nil {
 		t.Fatalf("expected config file %q: %v", path, err)
 	}
 

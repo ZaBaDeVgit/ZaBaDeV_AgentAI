@@ -14,9 +14,9 @@ import (
 type ModelPickerMode int
 
 const (
-	ModePhaseList     ModelPickerMode = iota // Main screen: phase list + Continue/Back
-	ModeProviderSelect                       // Sub-mode: pick a provider
-	ModeModelSelect                          // Sub-mode: pick a model from chosen provider
+	ModePhaseList      ModelPickerMode = iota // Main screen: phase list + Continue/Back
+	ModeProviderSelect                        // Sub-mode: pick a provider
+	ModeModelSelect                           // Sub-mode: pick a model from chosen provider
 )
 
 // maxVisibleItems is the maximum number of items shown in scrollable sub-lists.
@@ -33,8 +33,8 @@ type ProviderEntry struct {
 // plus navigation state for the two-step sub-selection modes.
 type ModelPickerState struct {
 	Providers    map[string]opencode.Provider
-	AvailableIDs []string                       // provider IDs with tool_call-capable models
-	SDDModels    map[string][]opencode.Model    // provider ID -> SDD-capable models
+	AvailableIDs []string                    // provider IDs with tool_call-capable models
+	SDDModels    map[string][]opencode.Model // provider ID -> SDD-capable models
 
 	Mode             ModelPickerMode
 	SelectedPhaseIdx int    // which phase row was selected (0 = "Set all")

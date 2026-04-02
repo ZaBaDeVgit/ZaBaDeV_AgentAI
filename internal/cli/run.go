@@ -140,7 +140,7 @@ func RunInstall(args []string, detection system.DetectionResult) (InstallResult,
 
 func withPostInstallNotes(report verify.Report, resolved planner.ResolvedPlan) verify.Report {
 	if hasComponent(resolved.OrderedComponents, model.ComponentGGA) && report.Ready {
-		report.FinalNote = report.FinalNote + "\n\nGGA is now installed globally. To enable project hooks, run in each repo:\n- gga init\n- gga install"
+		report.FinalNote += "\n\nGGA is now installed globally. To enable project hooks, run in each repo:\n- gga init\n- gga install"
 	}
 	report = withGoInstallPathNote(report, resolved)
 	return report
@@ -161,7 +161,7 @@ func withGoInstallPathNote(report verify.Report, resolved planner.ResolvedPlan) 
 	if isInPATH(binDir) {
 		return report
 	}
-	report.FinalNote = report.FinalNote + fmt.Sprintf(
+	report.FinalNote += fmt.Sprintf(
 		"\n\nThe engram binary was installed to %s via `go install`.\nAdd it to your PATH: %s",
 		binDir,
 		engramPathGuidance(os.Getenv("SHELL")),

@@ -151,7 +151,7 @@ func TestInjectOpenCodeMergesEngramToSettings(t *testing.T) {
 
 	// Verify NO plugin files or plugin arrays exist.
 	pluginPath := filepath.Join(home, ".config", "opencode", "plugins", "engram.ts")
-	if _, err := os.Stat(pluginPath); err == nil {
+	if _, err = os.Stat(pluginPath); err == nil {
 		t.Fatal("plugin file should NOT exist — old approach removed")
 	}
 	if strings.Contains(text, `"plugins"`) {
@@ -224,10 +224,10 @@ func TestInjectCursorWithMalformedMCPJsonRecovery(t *testing.T) {
 
 	// Pre-create ~/.cursor/mcp.json with invalid (non-JSON) content.
 	mcpPath := cursorAdapter.MCPConfigPath(home, "engram")
-	if err := os.MkdirAll(filepath.Dir(mcpPath), 0o755); err != nil {
+	if err = os.MkdirAll(filepath.Dir(mcpPath), 0o755); err != nil {
 		t.Fatalf("MkdirAll error = %v", err)
 	}
-	if err := os.WriteFile(mcpPath, []byte("allow: all"), 0o644); err != nil {
+	if err = os.WriteFile(mcpPath, []byte("allow: all"), 0o644); err != nil {
 		t.Fatalf("WriteFile(malformed mcp.json) error = %v", err)
 	}
 

@@ -377,6 +377,8 @@ func RunSync(args []string) (SyncResult, error) {
 		DryRun:    flags.DryRun,
 	}
 
+	var rt *syncRuntime
+
 	// No-op path: no agents were discovered or provided.
 	// Per spec: "No managed assets to sync — system completes without modifying
 	// unrelated files and reports that no managed sync actions were needed."
@@ -387,7 +389,7 @@ func RunSync(args []string) (SyncResult, error) {
 
 	if flags.DryRun {
 		// Build the plan for inspection, skip execution.
-		rt, err := newSyncRuntime(homeDir, selection)
+		rt, err = newSyncRuntime(homeDir, selection)
 		if err != nil {
 			return result, err
 		}
@@ -395,7 +397,7 @@ func RunSync(args []string) (SyncResult, error) {
 		return result, nil
 	}
 
-	rt, err := newSyncRuntime(homeDir, selection)
+	rt, err = newSyncRuntime(homeDir, selection)
 	if err != nil {
 		return result, err
 	}

@@ -91,7 +91,7 @@ func copyFile(source string, destination string, mode os.FileMode) error {
 	}
 	defer input.Close()
 
-	if err := os.MkdirAll(filepath.Dir(destination), 0o755); err != nil {
+	if err = os.MkdirAll(filepath.Dir(destination), 0o755); err != nil {
 		return fmt.Errorf("create backup directory for %q: %w", destination, err)
 	}
 
