@@ -40,7 +40,18 @@ jobs:
       run: go test ./... -v -race -count=1
 
     - name: Generate coverage
-      run: go test ./... -coverprofile=coverage.out -covermode=atomic
+      run: |
+        # Generate coverage per-package to avoid file conflicts
+        mkdir -p coverage
+        for pkg in $(go list ./...); do
+          name=$(echo "$pkg" | tr '/' '-')
+          go test "$pkg" -coverprofile="coverage/$name.out" -covermode=atomic || true
+        done
+        # Merge all coverage files
+        echo "mode: atomic" > coverage.out
+        for f in coverage/*.out; do
+          tail -n +2 "$f" >> coverage.out 2>/dev/null || true
+        done
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
