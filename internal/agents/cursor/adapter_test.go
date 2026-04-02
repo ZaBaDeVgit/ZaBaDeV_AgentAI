@@ -118,3 +118,287 @@ func TestDesktopAppNotAutoInstallable(t *testing.T) {
 		t.Fatalf("InstallCommand() should return error for desktop app")
 	}
 }
+
+func TestAdapterIdentity(t *testing.T) {
+	tests := []struct {
+		name      string
+		wantAgent model.AgentID
+		wantTier  model.SupportTier
+	}{
+		{
+			name:      "cursor agent identity",
+			wantAgent: model.AgentCursor,
+			wantTier:  model.TierFull,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := NewAdapter()
+			if got := a.Agent(); got != tt.wantAgent {
+				t.Errorf("Agent() = %v, want %v", got, tt.wantAgent)
+			}
+			if got := a.Tier(); got != tt.wantTier {
+				t.Errorf("Tier() = %v, want %v", got, tt.wantTier)
+			}
+		})
+	}
+}
+
+func TestSystemPromptPaths(t *testing.T) {
+	tests := []struct {
+		name     string
+		homeDir  string
+		expected string
+	}{
+		{
+			name:     "standard home directory",
+			homeDir:  "/home/user",
+			expected: "/home/user/.cursor/rules/gentle-ai.mdc",
+		},
+		{
+			name:     "path with special characters",
+			homeDir:  "/home/user-name_123",
+			expected: "/home/user-name_123/.cursor/rules/gentle-ai.mdc",
+		},
+		{
+			name:     "empty home dir returns relative path",
+			homeDir:  "",
+			expected: ".cursor/rules/gentle-ai.mdc",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := NewAdapter()
+			got := a.SystemPromptFile(tt.homeDir)
+			if got != tt.expected {
+				t.Errorf("SystemPromptFile() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSystemPromptDir(t *testing.T) {
+	tests := []struct {
+		name     string
+		homeDir  string
+		expected string
+	}{
+		{
+			name:     "standard home",
+			homeDir:  "/home/user",
+			expected: "/home/user/.cursor/rules",
+		},
+		{
+			name:     "empty home returns relative path",
+			homeDir:  "",
+			expected: ".cursor/rules",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := NewAdapter()
+			got := a.SystemPromptDir(tt.homeDir)
+			if got != tt.expected {
+				t.Errorf("SystemPromptDir() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestGlobalConfigDirTableDriven(t *testing.T) {
+	a := NewAdapter()
+	tests := []struct {
+		name     string
+		homeDir  string
+		expected string
+	}{
+		{
+			name:     "standard home",
+			homeDir:  "/home/user",
+			expected: "/home/user/.cursor",
+		},
+		{
+			name:     "tmp directory",
+			homeDir:  "/tmp/home",
+			expected: "/tmp/home/.cursor",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := a.GlobalConfigDir(tt.homeDir)
+			if got != tt.expected {
+				t.Errorf("GlobalConfigDir() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSkillsDirTableDriven(t *testing.T) {
+	a := NewAdapter()
+	tests := []struct {
+		name     string
+		homeDir  string
+		expected string
+	}{
+		{
+			name:     "standard home",
+			homeDir:  "/home/user",
+			expected: "/home/user/.cursor/skills",
+		},
+		{
+			name:     "tmp directory",
+			homeDir:  "/tmp/home",
+			expected: "/tmp/home/.cursor/skills",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := a.SkillsDir(tt.homeDir)
+			if got != tt.expected {
+				t.Errorf("SkillsDir() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestSettingsPathTableDriven(t *testing.T) {
+	a := NewAdapter()
+	tests := []struct {
+		name     string
+		homeDir  string
+		expected string
+	}{
+		{
+			name:     "standard home",
+			homeDir:  "/home/user",
+			expected: "/home/user/.cursor/settings.json",
+		},
+		{
+			name:     "tmp directory",
+			homeDir:  "/tmp/home",
+			expected: "/tmp/home/.cursor/settings.json",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := a.SettingsPath(tt.homeDir)
+			if got != tt.expected {
+				t.Errorf("SettingsPath() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestMCPConfigPathTableDriven(t *testing.T) {
+	a := NewAdapter()
+	tests := []struct {
+		name       string
+		homeDir    string
+		serverName string
+		expected   string
+	}{
+		{
+			name:       "context7 server",
+			homeDir:    "/home/user",
+			serverName: "context7",
+			expected:   "/home/user/.cursor/mcp.json",
+		},
+		{
+			name:       "filesystem server",
+			homeDir:    "/home/user",
+			serverName: "filesystem",
+			expected:   "/home/user/.cursor/mcp.json",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := a.MCPConfigPath(tt.homeDir, tt.serverName)
+			if got != tt.expected {
+				t.Errorf("MCPConfigPath() = %q, want %q", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCapabilities(t *testing.T) {
+	tests := []struct {
+		name              string
+		wantOutputStyles  bool
+		wantSlashCommands bool
+		wantSkills        bool
+		wantSystemPrompt  bool
+		wantMCP           bool
+		wantAutoInstall   bool
+	}{
+		{
+			name:              "cursor capabilities",
+			wantOutputStyles:  false,
+			wantSlashCommands: false,
+			wantSkills:        true,
+			wantSystemPrompt:  true,
+			wantMCP:           true,
+			wantAutoInstall:   false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := NewAdapter()
+			if got := a.SupportsOutputStyles(); got != tt.wantOutputStyles {
+				t.Errorf("SupportsOutputStyles() = %v, want %v", got, tt.wantOutputStyles)
+			}
+			if got := a.SupportsSlashCommands(); got != tt.wantSlashCommands {
+				t.Errorf("SupportsSlashCommands() = %v, want %v", got, tt.wantSlashCommands)
+			}
+			if got := a.SupportsSkills(); got != tt.wantSkills {
+				t.Errorf("SupportsSkills() = %v, want %v", got, tt.wantSkills)
+			}
+			if got := a.SupportsSystemPrompt(); got != tt.wantSystemPrompt {
+				t.Errorf("SupportsSystemPrompt() = %v, want %v", got, tt.wantSystemPrompt)
+			}
+			if got := a.SupportsMCP(); got != tt.wantMCP {
+				t.Errorf("SupportsMCP() = %v, want %v", got, tt.wantMCP)
+			}
+			if got := a.SupportsAutoInstall(); got != tt.wantAutoInstall {
+				t.Errorf("SupportsAutoInstall() = %v, want %v", got, tt.wantAutoInstall)
+			}
+		})
+	}
+}
+
+func TestCommandsDir(t *testing.T) {
+	a := NewAdapter()
+	// Cursor doesn't support slash commands
+	if got := a.CommandsDir("/home/user"); got != "" {
+		t.Errorf("CommandsDir() = %q, want empty string", got)
+	}
+}
+
+func TestOutputStyleDir(t *testing.T) {
+	a := NewAdapter()
+	// Cursor doesn't support output styles
+	if got := a.OutputStyleDir("/home/user"); got != "" {
+		t.Errorf("OutputStyleDir() = %q, want empty string", got)
+	}
+}
+
+func TestInstallCommandErrorType(t *testing.T) {
+	a := NewAdapter()
+
+	_, err := a.InstallCommand(system.PlatformProfile{})
+	if err == nil {
+		t.Fatalf("InstallCommand() should return error for desktop app")
+	}
+
+	var installErr AgentNotInstallableError
+	if !errors.As(err, &installErr) {
+		t.Fatalf("InstallCommand() error = %v, want AgentNotInstallableError", err)
+	}
+}

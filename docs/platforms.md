@@ -25,7 +25,7 @@ Release binaries are built for `linux`, `darwin`, and `windows` on both `amd64` 
 - **curl** is pre-installed on Windows 10+ and does not require separate installation.
 - **PowerShell** is the default shell when `$SHELL` is not set.
 - Release archives use `.zip` format on Windows (`.tar.gz` on macOS/Linux).
-- **GGA on Windows** only works inside Git Bash. After installation, run `gga init` and `gga install` from Git Bash — not from PowerShell or CMD. This is a GGA limitation, not a gentle-ai limitation.
+- **GGA on Windows** only works inside Git Bash. After installation, run `gga init` and `gga install` from Git Bash — not from PowerShell or CMD. This is a GGA limitation, not a zabadev limitation.
 
 ---
 
@@ -38,7 +38,7 @@ Use the release checksum to verify integrity:
 ```powershell
 # 1) Download checksums.txt from the same release tag
 # 2) Compute local hash
-Get-FileHash .\gentle-ai_<VERSION>_windows_amd64.zip -Algorithm SHA256
+Get-FileHash .\zabadev_<VERSION>_windows_amd64.zip -Algorithm SHA256
 
 # 3) Compare the hash with checksums.txt entry for that file
 ```

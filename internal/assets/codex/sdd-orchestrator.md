@@ -10,3 +10,6 @@ Spec-Driven Development workflow integrated into Codex.
 - `/sdd-apply` - Implement tasks
 - `/sdd-verify` - Validate implementation
 - `/sdd-archive` - Complete cycle
+
+## SDD Skills
+Skills are installed to `~/.codex/skills/` with shared conventions in `~/.codex/skills/_shared/`.

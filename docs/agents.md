@@ -22,5 +22,5 @@ All agents receive the **full SDD orchestrator** (agent-teams-lite) injected int
 - **VS Code Copilot** uses the `runSubagent` tool with support for parallel execution and custom agent definitions.
 - **Output Styles** are currently a Claude Code exclusive feature (`~/.claude/output-styles/`).
 - **Slash Commands** are currently supported by OpenCode only.
-- **VS Code Copilot** stores skills under `~/.copilot/skills/` (global), system prompt under `Code/User/prompts/gentle-ai.instructions.md`, and MCP config under `Code/User/mcp.json`.
+- **VS Code Copilot** stores skills under `~/.copilot/skills/` (global), system prompt under `Code/User/prompts/zabadev.instructions.md`, and MCP config under `Code/User/mcp.json`.
 - **Codex** currently gets shared instructions via `~/.codex/agents.md`, but this repo does not yet manage tab-switchable named agent profiles for Codex the way it does for OpenCode.

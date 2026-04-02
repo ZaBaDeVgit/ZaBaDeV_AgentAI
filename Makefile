@@ -25,7 +25,7 @@ test-coverage:
 lint:
 	gofmt -s -w .
 	go vet ./...
-	golint ./...
+	golangci-lint run ./...
 
 # Clean build artifacts
 clean:
@@ -39,7 +39,7 @@ install:
 
 # Development setup
 dev: install
-	go install github.com/cosmtrek/air@latest
+	go install github.com/air-verse/air@latest
 
 # Run in development mode with hot reload
 run-dev:

@@ -489,6 +489,8 @@ var sddOrchestratorMarkers = []string{
 	"## Agent Teams Orchestrator",
 	"## Spec-Driven Development (SDD) Orchestrator",
 	"## Spec-Driven Development (SDD)",
+	"# SDD Orchestrator",
+	"# SDD Orchestrator for Codex",
 }
 
 func hasSDDOrchestrator(content string) bool {

@@ -85,16 +85,14 @@ func TestRunInstallRollsBackOnComponentFailure(t *testing.T) {
 		return nil
 	}
 
-	_, err := RunInstall(
+	result, err := RunInstall(
 		[]string{"--agent", "opencode", "--component", "context7", "--component", "engram"},
 		system.DetectionResult{},
 	)
-	if err == nil {
-		t.Fatalf("RunInstall() expected error")
-	}
-
-	if !strings.Contains(err.Error(), "execute install pipeline") {
-		t.Fatalf("RunInstall() error = %v", err)
+	// With ContinueOnError, RunInstall returns nil error when at least one step
+	// succeeds, but the execution result still carries the failure and rollback.
+	if err == nil && result.Execution.Err == nil {
+		t.Fatalf("RunInstall() expected error in execution result")
 	}
 
 	after, err := os.ReadFile(settingsPath)
@@ -367,16 +365,14 @@ func TestRunInstallLinuxRollsBackOnComponentFailure(t *testing.T) {
 	}
 
 	detection := linuxDetectionResult(system.LinuxDistroUbuntu, "apt")
-	_, err := RunInstall(
+	result, err := RunInstall(
 		[]string{"--agent", "opencode", "--component", "context7", "--component", "engram"},
 		detection,
 	)
-	if err == nil {
-		t.Fatalf("RunInstall() expected error")
-	}
-
-	if !strings.Contains(err.Error(), "execute install pipeline") {
-		t.Fatalf("RunInstall() error = %v", err)
+	// With ContinueOnError, RunInstall returns nil error when at least one step
+	// succeeds, but the execution result still carries the failure and rollback.
+	if err == nil && result.Execution.Err == nil {
+		t.Fatalf("RunInstall() expected error in execution result")
 	}
 
 	// Verify rollback restored the original file.
@@ -671,16 +667,14 @@ func TestRunInstallMacOSRollbackStillWorks(t *testing.T) {
 	}
 
 	detection := macOSDetectionResult()
-	_, err := RunInstall(
+	result, err := RunInstall(
 		[]string{"--agent", "opencode", "--component", "context7", "--component", "engram"},
 		detection,
 	)
-	if err == nil {
-		t.Fatalf("RunInstall() expected error")
-	}
-
-	if !strings.Contains(err.Error(), "execute install pipeline") {
-		t.Fatalf("RunInstall() error = %v", err)
+	// With ContinueOnError, RunInstall returns nil error when at least one step
+	// succeeds, but the execution result still carries the failure and rollback.
+	if err == nil && result.Execution.Err == nil {
+		t.Fatalf("RunInstall() expected error in execution result")
 	}
 
 	after, err := os.ReadFile(settingsPath)
@@ -820,6 +814,15 @@ func TestRunInstallEngramSetupStrictFailsWhenSetupFails(t *testing.T) {
 	t.Setenv("GENTLE_AI_ENGRAM_SETUP_STRICT", "1")
 
 	home := t.TempDir()
+	// Create the opencode config file so post-install verification doesn't fail.
+	settingsPath := filepath.Join(home, ".config", "opencode", "opencode.json")
+	if err := os.MkdirAll(filepath.Dir(settingsPath), 0o755); err != nil {
+		t.Fatalf("MkdirAll() error = %v", err)
+	}
+	if err := os.WriteFile(settingsPath, []byte("{}"), 0o644); err != nil {
+		t.Fatalf("WriteFile() error = %v", err)
+	}
+
 	restoreHome := osUserHomeDir
 	restoreCommand := runCommand
 	restoreLookPath := cmdLookPath
@@ -840,15 +843,26 @@ func TestRunInstallEngramSetupStrictFailsWhenSetupFails(t *testing.T) {
 		return nil
 	}
 
-	_, err := RunInstall(
+	result, err := RunInstall(
 		[]string{"--agent", "opencode", "--component", "engram"},
 		macOSDetectionResult(),
 	)
-	if err == nil {
+	// With ContinueOnError, RunInstall returns nil error when at least one step
+	// succeeds, but the execution result still carries the failure.
+	if err == nil && result.Execution.Err == nil {
 		t.Fatalf("RunInstall() expected error in strict setup mode")
 	}
-	if !strings.Contains(err.Error(), "engram setup for \"opencode\"") {
-		t.Fatalf("RunInstall() error = %v, want setup error", err)
+
+	// Verify the engram setup step failed.
+	foundSetupErr := false
+	for _, step := range result.Execution.Apply.Steps {
+		if step.Err != nil && strings.Contains(step.Err.Error(), "engram setup for") {
+			foundSetupErr = true
+			break
+		}
+	}
+	if !foundSetupErr {
+		t.Fatalf("RunInstall() execution missing engram setup error, got: %v", err)
 	}
 }
 

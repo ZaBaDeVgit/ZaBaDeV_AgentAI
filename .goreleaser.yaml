@@ -19,7 +19,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X main.version={{.Version}}
+      - -X github.com/zabadev/agent-ai/cmd/zabadev/main.version={{.Version}}
 
 archives:
   - formats:
@@ -43,7 +43,7 @@ changelog:
 
 brews:
   - repository:
-      owner: zabadev
+      owner: ZaBaDeVgit
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Formula
@@ -52,3 +52,10 @@ brews:
     description: "Senior ZaBaDeV AI Agent Ecosystem — One command to configure any AI coding agent."
     license: "MIT"
     commit_msg_template: "chore: update zabadev formula to {{ .Tag }}"
+
+release:
+  footer: |
+    **Full Changelog**: https://github.com/ZaBaDeVgit/ZaBaDeV_AgentAI/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"

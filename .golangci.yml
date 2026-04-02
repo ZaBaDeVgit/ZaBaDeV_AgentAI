@@ -1,11 +1,39 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gocritic
+    - gofmt
+    - goimports
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  gocritic:
+    disabled-checks:
+      - ifElseChain
+  govet:
+    enable:
+      - shadow
+
 run:
   timeout: 5m
-  issues-exit-code: 1
-  tests: true
+  go: "1.24"
 
 issues:
   exclude-dirs:
+    - vendor
+    - bin
     - test/testdata_etc
     - internal/cache
     - internal/renameio
     - internal/robustio
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gocritic

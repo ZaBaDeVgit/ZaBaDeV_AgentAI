@@ -1,4 +1,4 @@
-# SDD Orchestrator
+## Agent Teams Orchestrator
 
 Spec-Driven Development workflow integrated into the agent.
 
@@ -20,3 +20,18 @@ Spec-Driven Development workflow integrated into the agent.
 5. Break down into actionable tasks
 6. Implement and verify
 7. Archive and sync to main specs
+
+## Dependency graph
+
+This component has a dependency on the spec and design artifacts.
+
+```
+proposal → specs → tasks → apply → verify → archive
+              ↑
+              |
+            design
+```
+
+## sub-agent Delegation
+Use sub-agents for code reading/writing, research, and parallel work.
+Each sub-agent receives a focused task and returns structured results.

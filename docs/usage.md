@@ -19,7 +19,7 @@
 Just run it — the Bubbletea TUI guides you through agent selection, components, skills, and presets:
 
 ```bash
-gentle-ai
+zabadev
 ```
 
 ---
@@ -28,24 +28,24 @@ gentle-ai
 
 ```bash
 # Full ecosystem for multiple agents
-gentle-ai install \
+zabadev install \
   --agent claude-code,opencode,gemini-cli \
   --preset full-gentleman
 
 # Minimal setup for Cursor
-gentle-ai install \
+zabadev install \
   --agent cursor \
   --preset minimal
 
 # Pick specific components and skills
-gentle-ai install \
+zabadev install \
   --agent claude-code \
   --component engram,sdd,skills,context7,persona,permissions \
   --skill go-testing,skill-creator \
   --persona senior-zabadev
 
 # Dry-run first (preview plan without applying changes)
-gentle-ai install --dry-run \
+zabadev install --dry-run \
   --agent claude-code,opencode \
   --preset full-gentleman
 ```
@@ -66,7 +66,7 @@ gentle-ai install --dry-run \
 
 ## Dependency Management
 
-`gentle-ai` auto-detects prerequisites before installation and provides platform-specific guidance:
+`zabadev` auto-detects prerequisites before installation and provides platform-specific guidance:
 
 - **Detected tools**: git, curl, node, npm, brew, go
 - **Version checks**: validates minimum versions where applicable

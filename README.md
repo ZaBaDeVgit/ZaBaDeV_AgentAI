@@ -81,14 +81,14 @@ make build
 make install
 
 # Or install directly
-go install github.com/zabadev/agent-ai/cmd/gentle-ai@latest
+go install github.com/zabadev/agent-ai/cmd/zabadev@latest
 ```
 
 ### Setup
 
 ```bash
 # Initialize ZaBaDeV ecosystem
-gentle-ai install
+zabadev install
 
 # For development with hot reload
 make dev
@@ -103,51 +103,51 @@ make run-dev
 
 ```bash
 # Install agents and tools
-gentle-ai install
+zabadev install
 
 # Sync configurations
-gentle-ai sync
+zabadev sync
 
 # Update tools
-gentle-ai upgrade
+zabadev upgrade
 
 # Restore from backup
-gentle-ai restore --list
-gentle-ai restore <backup-id>
+zabadev restore --list
+zabadev restore <backup-id>
 
 # Show version
-gentle-ai version
+zabadev version
 ```
 
 ### SDD Workflow
 
 ```bash
 # Initialize project
-gentle-ai sdd-init
+zabadev sdd-init
 
 # Explore feature
-gentle-ai sdd-explore "add user authentication"
+zabadev sdd-explore "add user authentication"
 
 # Create change proposal
-gentle-ai sdd-new "implement-user-auth"
+zabadev sdd-new "implement-user-auth"
 
 # Write specifications
-gentle-ai sdd-spec
+zabadev sdd-spec
 
 # Design implementation
-gentle-ai sdd-design
+zabadev sdd-design
 
 # Plan tasks
-gentle-ai sdd-tasks
+zabadev sdd-tasks
 
 # Implement
-gentle-ai sdd-apply
+zabadev sdd-apply
 
 # Verify
-gentle-ai sdd-verify
+zabadev sdd-verify
 
 # Archive
-gentle-ai sdd-archive
+zabadev sdd-archive
 ```
 
 ---
@@ -156,7 +156,7 @@ gentle-ai sdd-archive
 
 ```
 ZaBaDeV-AgentAI/
-├── cmd/gentle-ai/          # Main CLI application
+├── cmd/zabadev/          # Main CLI application
 ├── internal/
 │   ├── agents/            # Agent-specific implementations
 │   ├── app/               # Core application logic
@@ -240,23 +240,23 @@ Extend functionality with skills:
 
 ```bash
 # List available skills
-gentle-ai sync --skills
+zabadev sync --skills
 
 # Install specific skills
-gentle-ai sync --skills react,typescript,testing
+zabadev sync --skills react,typescript,testing
 ```
 
 ### Backup & Restore
 
 ```bash
 # Create backup
-gentle-ai install  # Creates automatic backup
+zabadev install  # Creates automatic backup
 
 # List available backups
-gentle-ai restore --list
+zabadev restore --list
 
 # Restore specific backup
-gentle-ai restore backup-2024-01-15-14-30-00
+zabadev restore backup-2024-01-15-14-30-00
 ```
 
 ---
@@ -290,165 +290,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Built with ❤️ for the AI development community**
 
 [⭐ Star us on GitHub](https://github.com/zabadev/agent-ai) • [📖 Read the docs](docs/) • [🐛 Report bugs](https://github.com/zabadev/agent-ai/issues)
-
-</div>
-|----------------|-------------|
-| **Engram** | Sistema de memoria persistente que survive entre sesiones |
-| **SDD Workflow** | 9 skills para Spec-Driven Development: init, explore, propose, spec, design, tasks, apply, verify, archive |
-| **Skills** | 11+ skills profesionales para desarrollo moderno |
-| **MCP Servers** | Context7, Notion, Jira para integracion de documentacion y proyectos |
-| **GGA** | Guardian Angel — revision de codigo AI en cada commit |
-| **Persona ZaBaDeV** | Modo mentor arquitectonico con estilo teaching-first |
-| **Multi-plataforma** | macOS, Linux, Windows (WSL) |
-
----
-
-## Instalacion
-
-### macOS / Linux
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/zabadev/agent-ai/main/scripts/install.sh | bash
-```
-
-### Windows (PowerShell)
-
-```powershell
-irm https://raw.githubusercontent.com/zabadev/agent-ai/main/scripts/install.ps1 | iex
-```
-
-### Homebrew (macOS / Linux)
-
-```bash
-brew tap zabadev/homebrew-tap
-brew install zabadev
-```
-
-### Go install (cualquier plataforma con Go 1.24+)
-
-```bash
-go install github.com/zabadev/agent-ai/cmd/zabadev@latest
-```
-
-### Desde Releases
-
-Descarga el binario para tu plataforma desde [GitHub Releases](https://github.com/zabadev/agent-ai/releases).
-
----
-
-## Uso
-
-```bash
-# Instalacion estandar en OpenCode (comportamiento por defecto)
-zabadev
-
-# Mostrar ayuda
-zabadev --help
-
-# Mostrar version
-zabadev version
-```
-
----
-
-## Que se Instala
-
-Cuando ejecutas `zabadev`, se instala en tu agente de IA:
-
-| Componente       | Descripcion                      |
-| ---------------- | -------------------------------- |
-| **Engram**       | Sistema de memoria persistente   |
-| **SDD Workflow** | Spec-Driven Development completo |
-| **Skills**       | 11+ skills profesionales         |
-| **Context7**     | Servidor MCP para documentacion  |
-| **GGA**          | Automatizacion de agente global  |
-| **Permisos**     | Configuracion security-first     |
-| **Persona**      | Senior ZaBaDeV modo ensenanza    |
-
----
-
-## Estructura del Proyecto
-
-```
-cmd/zabadev/             # Punto de entrada CLI
-internal/
-  app/                   # Dispatch de comandos + wiring
-  model/                 # Tipos de dominio
-  catalog/               # Definiciones de registro
-  system/                # Deteccion OS/distro
-  cli/                   # Flags de instalacion
-  pipeline/              # Ejecucion por etapas
-  backup/                # Snapshot de config
-  components/            # Logica por componente
-    engram/  sdd/  skills/  mcp/  persona/
-  agents/                # Adaptadores de agente
-    claude/  opencode/  gemini/  cursor/
-  verify/                # Health checks
-  tui/                   # Interfaz Bubbletea
-scripts/                 # Scripts de instalacion
-e2e/                     # Tests E2E en Docker
-testdata/                # Fixtures golden
-```
-
----
-
-## Testing
-
-```bash
-# Tests unitarios
-go test ./...
-
-# Docker E2E (Ubuntu + Arch + Fedora, requiere Docker)
-RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
-```
-
----
-
-## Documentacion Adicional
-
-- [Arquitectura](docs/architecture.md) — Detalles tecnicos del proyecto
-- [Usage](docs/usage.md) — Guia de uso avanzada
-- [Non-Interactive](docs/non-interactive.md) — Modo no interactivo para CI
-- [Quickstart](docs/quickstart.md) — Guia de inicio rapido
-- [Platforms](docs/platforms.md) — Notas especificas por plataforma
-
----
-
-## Relación con Gentleman.Dots
-
-|                   | Gentleman.Dots                                       | ZaBaDeV                                             |
-| ----------------- | ---------------------------------------------------- | --------------------------------------------------- |
-| **Proposito**     | Entorno de desarrollo (editores, shells, terminales) | Capa de desarrollo IA (agentes, memoria, skills)    |
-| **Instala**       | Neovim, Fish/Zsh, Tmux/Zellij, Ghostty               | Configura Claude Code, OpenCode, Gemini CLI, Cursor |
-| **Superposicion** | Ninguna — complementario                             | Ninguna — diferente capa                            |
-
-Instala Gentleman.Dots primero para tu entorno de desarrollo, luego ZaBaDeV para la capa de IA.
-
----
-
-## Licencia
-
-MIT License — consulta el archivo [LICENSE](LICENSE) para mas detalles.
-
----
-
-## Agradecimientos
-
-<div align="center">
-
-**Dedicado a Gentleman, el creador original del ecosistema ZaBaDeV.**
-
-</div>
-
-Este proyecto esta inspirado en el trabajo visionario de **Gentleman Programming**, quien creo el concepto de un ecosistema de desarrollo de IA completo y profesional. Su contribucion al ecosistema de desarrollo con herramientas como Engram, SDD, y las skills de desarrollo ha sido fundamental para hacer posible este proyecto.
-
-Para mas informacion sobre el ecosistema Gentleman original, visita: [gentleman.ai](https://gentleman.ai)
-
----
-
-<div align="center">
-
-_Con ❤️ desde la comunidad ZaBaDeV_
 
 </div>
 

@@ -24,7 +24,12 @@ func TestWithPostInstallNotesAddsGGANextSteps(t *testing.T) {
 
 func TestWithPostInstallNotesDoesNotChangeNonGGA(t *testing.T) {
 	report := verify.Report{Ready: true, FinalNote: "You're ready."}
-	resolved := planner.ResolvedPlan{OrderedComponents: []model.ComponentID{model.ComponentEngram}}
+	resolved := planner.ResolvedPlan{
+		OrderedComponents: []model.ComponentID{model.ComponentEngram},
+		PlatformDecision: planner.PlatformDecision{
+			PackageManager: "brew", // brew = no go install PATH note
+		},
+	}
 
 	updated := withPostInstallNotes(report, resolved)
 	if updated.FinalNote != report.FinalNote {

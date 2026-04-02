@@ -7,7 +7,7 @@
 ## Architecture
 
 ```
-cmd/gentle-ai/             CLI entrypoint
+cmd/zabadev/             CLI entrypoint
 internal/
   app/                     Command dispatch + runtime wiring
   model/                   Domain types (agents, components, skills, presets, personas)
@@ -44,10 +44,10 @@ go test ./...
 RUN_FULL_E2E=1 RUN_BACKUP_TESTS=1 ./e2e/docker-test.sh
 
 # Dry-run smoke test (macOS/Linux)
-gentle-ai install --dry-run --agent claude-code --preset minimal
+zabadev install --dry-run --agent claude-code --preset minimal
 
 # Dry-run smoke test (Windows PowerShell)
-gentle-ai.exe install --dry-run --agent claude-code --preset minimal
+zabadev.exe install --dry-run --agent claude-code --preset minimal
 ```
 
 Test coverage:
