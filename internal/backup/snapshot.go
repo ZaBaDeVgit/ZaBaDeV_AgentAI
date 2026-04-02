@@ -99,8 +99,7 @@ func copyFile(source string, destination string, mode os.FileMode) error {
 	}
 
 	// #nosec G302 -- executable binary needs 0755 permissions
-	// #nosec G304 -- path is derived from user home directory, not external input
-	output, err := os.OpenFile(destination, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode.Perm())
+	output, err := os.OpenFile(destination, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode.Perm()) // #nosec G304 -- path is derived from user home directory, not external input
 	if err != nil {
 		return fmt.Errorf("create snapshot file %q: %w", destination, err)
 	}
