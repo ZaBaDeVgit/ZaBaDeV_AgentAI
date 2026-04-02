@@ -209,6 +209,7 @@ func mergeJSONFile(path string, overlay []byte) (filemerge.WriteResult, error) {
 }
 
 var osReadFile = func(path string) ([]byte, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	content, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -221,6 +222,7 @@ var osReadFile = func(path string) ([]byte, error) {
 }
 
 func readFileOrEmpty(path string) (string, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -246,8 +248,8 @@ func readFileOrEmpty(path string) (string, error) {
 //     engram binary, rebuild the config using that command and the canonical
 //     args (["mcp", "--tools=agent"]) so that the absolute path is preserved
 //     and the correct flags are always present.
-//   - Otherwise (relative command or other value), return defaultContent.
 func buildSeparateMCPContent(mcpPath string, defaultContent []byte) []byte {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	raw, err := os.ReadFile(mcpPath)
 	if err != nil {
 		// File does not exist or is not readable — use the default.

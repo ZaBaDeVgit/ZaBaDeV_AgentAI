@@ -33,6 +33,7 @@ func restoreEntry(entry ManifestEntry) error {
 		return fmt.Errorf("read snapshot file %q: %w", entry.SnapshotPath, err)
 	}
 
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(filepath.Dir(entry.OriginalPath), 0o755); err != nil {
 		return fmt.Errorf("create restore directory for %q: %w", entry.OriginalPath, err)
 	}

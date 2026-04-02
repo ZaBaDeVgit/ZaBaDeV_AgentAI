@@ -231,6 +231,7 @@ type runtimeState struct {
 
 func newInstallRuntime(homeDir string, selection model.Selection, resolved planner.ResolvedPlan, profile system.PlatformProfile) (*installRuntime, error) {
 	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(backupRoot, 0o755); err != nil {
 		return nil, fmt.Errorf("create backup root directory %q: %w", backupRoot, err)
 	}
@@ -567,6 +568,7 @@ func windowsGoCandidates() []string {
 // It is used by both the CLI and TUI paths.
 func BuildRealStagePlan(homeDir string, selection model.Selection, resolved planner.ResolvedPlan, profile system.PlatformProfile) (pipeline.StagePlan, error) {
 	backupRoot := filepath.Join(homeDir, ".gentle-ai", "backups")
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(backupRoot, 0o755); err != nil {
 		return pipeline.StagePlan{}, fmt.Errorf("create backup root directory %q: %w", backupRoot, err)
 	}
@@ -629,6 +631,7 @@ func runCommandSequence(commands [][]string) error {
 }
 
 func executeCommand(name string, args ...string) error {
+	// #nosec G204 -- executeCommand is only called with hardcoded trusted commands from engram adapters
 	cmd := exec.Command(name, args...)
 
 	if streamCommandOutput {

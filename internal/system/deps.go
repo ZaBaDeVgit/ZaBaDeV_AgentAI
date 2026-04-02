@@ -142,6 +142,7 @@ func detectSingleDep(ctx context.Context, dep Dependency) Dependency {
 	dep.Installed = true
 
 	// Run version command to extract version string.
+	// #nosec G204 -- dep.DetectCmd comes from trusted internal config, not user input
 	cmd := exec.CommandContext(ctx, dep.DetectCmd[0], dep.DetectCmd[1:]...)
 	out, err := cmd.Output()
 	if err != nil {

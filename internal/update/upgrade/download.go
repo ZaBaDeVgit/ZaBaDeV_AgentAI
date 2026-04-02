@@ -127,10 +127,13 @@ func extractBinaryFromTarGz(r io.Reader, binaryName string, outPath string) erro
 
 // writeExecutable writes the content from r to outPath with executable permissions.
 func writeExecutable(r io.Reader, outPath string) error {
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
 		return fmt.Errorf("create parent dir: %w", err)
 	}
 
+	// #nosec G302 -- executable binary needs 0755 permissions
+	// #nosec G304 -- path is derived from user home directory, not external input
 	f, err := os.OpenFile(outPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o755)
 	if err != nil {
 		return fmt.Errorf("create %s: %w", outPath, err)

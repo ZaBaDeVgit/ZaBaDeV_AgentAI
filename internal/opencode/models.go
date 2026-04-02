@@ -59,6 +59,7 @@ type Provider struct {
 
 // LoadModels parses the OpenCode models cache JSON file and returns providers keyed by ID.
 func LoadModels(cachePath string) (map[string]Provider, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	data, err := os.ReadFile(cachePath)
 	if err != nil {
 		return nil, fmt.Errorf("read models cache %q: %w", cachePath, err)
@@ -85,6 +86,7 @@ func LoadModels(cachePath string) (map[string]Provider, error) {
 
 // loadAuthProviders reads the OpenCode auth.json and returns authenticated provider IDs.
 func loadAuthProviders(authPath string) map[string]bool {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	data, err := os.ReadFile(authPath)
 	if err != nil {
 		return nil

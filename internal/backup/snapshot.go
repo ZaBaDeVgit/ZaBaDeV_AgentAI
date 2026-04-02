@@ -20,6 +20,7 @@ func NewSnapshotter() Snapshotter {
 }
 
 func (s Snapshotter) Create(snapshotDir string, paths []string) (Manifest, error) {
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(snapshotDir, 0o755); err != nil {
 		return Manifest{}, fmt.Errorf("create snapshot directory %q: %w", snapshotDir, err)
 	}
@@ -85,16 +86,20 @@ func (s Snapshotter) snapshotPath(snapshotDir string, sourcePath string) (Manife
 }
 
 func copyFile(source string, destination string, mode os.FileMode) error {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	input, err := os.Open(source)
 	if err != nil {
 		return fmt.Errorf("open source file %q: %w", source, err)
 	}
 	defer input.Close()
 
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err = os.MkdirAll(filepath.Dir(destination), 0o755); err != nil {
 		return fmt.Errorf("create backup directory for %q: %w", destination, err)
 	}
 
+	// #nosec G302 -- executable binary needs 0755 permissions
+	// #nosec G304 -- path is derived from user home directory, not external input
 	output, err := os.OpenFile(destination, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode.Perm())
 	if err != nil {
 		return fmt.Errorf("create snapshot file %q: %w", destination, err)

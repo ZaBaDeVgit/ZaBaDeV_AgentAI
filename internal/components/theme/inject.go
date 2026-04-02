@@ -44,6 +44,7 @@ func mergeJSONFile(path string, overlay []byte) (filemerge.WriteResult, error) {
 }
 
 var osReadFile = func(path string) ([]byte, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	content, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {

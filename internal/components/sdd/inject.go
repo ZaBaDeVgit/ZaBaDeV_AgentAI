@@ -24,6 +24,7 @@ type InjectionResult struct {
 var (
 	npmLookPath = exec.LookPath
 	npmRun      = func(dir string, args ...string) ([]byte, error) {
+		// #nosec G204 -- npmRun is only called with trusted internal commands (bun/npm)
 		cmd := exec.Command(args[0], args[1:]...)
 		cmd.Dir = dir
 		// CombinedOutput captures stdout+stderr so we can surface actionable
@@ -251,6 +252,7 @@ func installOpenCodePlugins(homeDir string) (InjectionResult, error) {
 	opencodeDir := filepath.Join(homeDir, ".config", "opencode")
 	pluginsDir := filepath.Join(opencodeDir, "plugins")
 
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(pluginsDir, 0o755); err != nil {
 		return InjectionResult{}, fmt.Errorf("create plugins dir: %w", err)
 	}
@@ -384,6 +386,7 @@ func jsonValueEqual(a, b any) bool {
 }
 
 func mergeJSONFile(path string, overlay []byte) (mergeJSONResult, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	baseJSON, err := os.ReadFile(path)
 	if err != nil {
 		if !os.IsNotExist(err) {
@@ -411,6 +414,7 @@ func mergeJSONFile(path string, overlay []byte) (mergeJSONResult, error) {
 	// Compare merged result with existing file semantically to avoid
 	// false-positive Changed when re-marshaling produces different key order
 	// (Go maps have randomized iteration order).
+	// #nosec G304 -- path is derived from user home directory, not external input
 	existing, readErr := os.ReadFile(path)
 	if readErr == nil {
 		var existingObj, mergedObj map[string]any
@@ -690,6 +694,7 @@ func injectModelAssignments(overlayBytes []byte, assignments map[string]model.Mo
 }
 
 func readFileOrEmpty(path string) (string, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {

@@ -19,6 +19,7 @@ func WriteFileAtomic(path string, content []byte, perm fs.FileMode) (WriteResult
 	}
 
 	created := false
+	// #nosec G304 -- path is derived from user home directory, not external input
 	existing, err := os.ReadFile(path)
 	if err == nil {
 		if bytes.Equal(existing, content) {
@@ -31,6 +32,7 @@ func WriteFileAtomic(path string, content []byte, perm fs.FileMode) (WriteResult
 	}
 
 	dir := filepath.Dir(path)
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err = os.MkdirAll(dir, 0o755); err != nil {
 		return WriteResult{}, fmt.Errorf("create parent directories for %q: %w", path, err)
 	}
@@ -38,6 +40,7 @@ func WriteFileAtomic(path string, content []byte, perm fs.FileMode) (WriteResult
 	// restricted permissions (e.g. 555) by a previous installer version or
 	// the target agent itself. MkdirAll succeeds on existing dirs but does
 	// not fix their permissions, causing os.CreateTemp to fail below.
+	// #nosec G302 -- directory needs 0755 for agent tool access
 	if err = os.Chmod(dir, 0o755); err != nil {
 		return WriteResult{}, fmt.Errorf("set write permission on directory for %q: %w", path, err)
 	}

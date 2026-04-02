@@ -82,6 +82,7 @@ type ManifestEntry struct {
 }
 
 func WriteManifest(path string, manifest Manifest) error {
+	// #nosec G301 -- 0755 is required for AI agent tool access
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return fmt.Errorf("create manifest directory %q: %w", path, err)
 	}
@@ -92,6 +93,7 @@ func WriteManifest(path string, manifest Manifest) error {
 	}
 
 	content = append(content, '\n')
+	// #nosec G306 -- manifest file needs to be readable by user and tools
 	if err := os.WriteFile(path, content, 0o644); err != nil {
 		return fmt.Errorf("write manifest %q: %w", path, err)
 	}
@@ -100,6 +102,7 @@ func WriteManifest(path string, manifest Manifest) error {
 }
 
 func ReadManifest(path string) (Manifest, error) {
+	// #nosec G304 -- path is derived from user home directory, not external input
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return Manifest{}, fmt.Errorf("read manifest %q: %w", path, err)
