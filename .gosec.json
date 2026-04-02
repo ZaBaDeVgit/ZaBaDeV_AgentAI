@@ -1,0 +1,12 @@
+{
+  "global": {
+    "nosec": "enabled",
+    "audit": "disabled"
+  },
+  "rules": {
+    "G304": {
+      "file": "all"
+    }
+  },
+  "exclude-generated": true
+}
