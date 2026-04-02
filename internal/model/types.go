@@ -59,6 +59,8 @@ const (
 	SkillDjangoDRF  SkillID = "django-drf"
 	SkillGoTesting  SkillID = "go-testing"
 	SkillCreator    SkillID = "skill-creator"
+	SkillPinokio    SkillID = "pinokio"
+	SkillGepeto     SkillID = "gepeto"
 )
 
 type PersonaID string

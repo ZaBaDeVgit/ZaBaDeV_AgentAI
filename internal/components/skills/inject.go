@@ -15,7 +15,12 @@ import (
 // isSDDSkill reports whether a skill ID belongs to the SDD orchestrator suite.
 // SDD skills are installed by the SDD component; the skills component skips
 // them to prevent duplicate writes when both components are selected.
+// Note: sdd-new is a combined explore+propose skill that is installed by the
+// skills component, not the SDD component.
 func isSDDSkill(id model.SkillID) bool {
+	if id == model.SkillSDDNew {
+		return false // installed by skills component, not SDD component
+	}
 	return strings.HasPrefix(string(id), "sdd-")
 }
 

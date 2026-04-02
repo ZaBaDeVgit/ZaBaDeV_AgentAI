@@ -185,6 +185,7 @@ func Inject(homeDir string, adapter agents.Adapter, sddMode model.SDDModeID, mod
 			sddSkills := []string{
 				"sdd-init", "sdd-explore", "sdd-propose", "sdd-spec",
 				"sdd-design", "sdd-tasks", "sdd-apply", "sdd-verify", "sdd-archive",
+				"sdd-new",
 			}
 
 			for _, skill := range sddSkills {

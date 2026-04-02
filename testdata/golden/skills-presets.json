@@ -12,7 +12,19 @@
       "sdd-verify",
       "sdd-archive",
       "go-testing",
-      "skill-creator"
+      "skill-creator",
+      "react-19",
+      "nextjs-15",
+      "playwright",
+      "tailwind-4",
+      "zustand-5",
+      "zod-4",
+      "ai-sdk-5",
+      "pytest",
+      "django-drf",
+      "pinokio",
+      "gepeto",
+      "sdd-new"
     ]
   },
   {
@@ -28,7 +40,19 @@
       "sdd-verify",
       "sdd-archive",
       "go-testing",
-      "skill-creator"
+      "skill-creator",
+      "react-19",
+      "nextjs-15",
+      "playwright",
+      "tailwind-4",
+      "zustand-5",
+      "zod-4",
+      "ai-sdk-5",
+      "pytest",
+      "django-drf",
+      "pinokio",
+      "gepeto",
+      "sdd-new"
     ]
   },
   {
