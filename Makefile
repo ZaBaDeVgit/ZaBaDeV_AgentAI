@@ -1,8 +1,8 @@
-.PHONY: all build test lint clean install dev run
+.PHONY: all build test test-coverage lint clean deps install dev run run-dev build-all docker-build docker-run ci
 
 # Variables
 BINARY_NAME=zabadev
-GO_VERSION=1.21
+GO_VERSION=1.24
 MAIN_PACKAGE=./cmd/zabadev
 
 # Default target
@@ -23,7 +23,7 @@ test-coverage:
 
 # Lint code
 lint:
-	gofmt -s -w .
+	test -z "$$(gofmt -l $$(find cmd internal -type f -name '*.go'))"
 	go vet ./...
 	golangci-lint run ./...
 
@@ -32,13 +32,16 @@ clean:
 	rm -rf bin/
 	rm -f coverage.out coverage.html
 
-# Install dependencies
-install:
+# Download dependencies
+deps:
 	go mod download
-	go mod tidy
+
+# Install the CLI into GOBIN (or GOPATH/bin)
+install: build
+	go install $(MAIN_PACKAGE)
 
 # Development setup
-dev: install
+dev: deps
 	go install github.com/air-verse/air@latest
 
 # Run in development mode with hot reload
@@ -64,4 +67,4 @@ docker-run:
 	docker run --rm $(BINARY_NAME)
 
 # CI pipeline
-ci: install lint test build
+ci: deps lint test build

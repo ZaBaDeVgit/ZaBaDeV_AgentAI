@@ -59,6 +59,7 @@ func TestAllEmbeddedAssetsAreReadable(t *testing.T) {
 		// Foundation skills
 		"skills/go-testing/SKILL.md",
 		"skills/skill-creator/SKILL.md",
+		"skills/project-engineering/SKILL.md",
 	}
 
 	for _, path := range expectedFiles {

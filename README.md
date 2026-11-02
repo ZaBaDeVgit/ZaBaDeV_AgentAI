@@ -13,12 +13,12 @@
 
 <h1>Senior ZaBaDeV — AI Agent Ecosystem</h1>
 
-<p><strong>One command. OpenCode fully configured with the complete ZaBaDeV ecosystem Full.</strong></p>
+<p><strong>One command to configure OpenCode with the ZaBaDeV development toolkit.</strong></p>
 
 <p>
 <a href="https://github.com/zabadev/agent-ai/releases"><img src="https://img.shields.io/github/v/release/zabadev/agent-ai" alt="Release"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-<img src="https://img.shields.io/badge/Go-1.21+-00ADD8?logo=go&logoColor=white" alt="Go 1.21+">
+<img src="https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white" alt="Go 1.24+">
 <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform">
 <a href="https://github.com/zabadev/agent-ai/actions"><img src="https://github.com/zabadev/agent-ai/workflows/CI/badge.svg" alt="CI"></a>
 </p>
@@ -27,22 +27,16 @@
 
 ---
 
-## Screenshot
-
-![ZaBaDeV Agent AI](Captura.png)
-
----
-
 ## What is ZaBaDeV?
 
-**Senior ZaBaDeV** is an AI development ecosystem that transforms your AI editor/agent into a professional development assistant with:
+**ZaBaDeV** is a configuration and tooling layer for existing AI coding agents such as OpenCode. It does not ship its own foundation model or guarantee autonomous behavior; it installs instructions, skills, MCP integrations and workflows that the selected agent can use:
 
 - **Persistent Memory (Engram)** — Remembers decisions, bugs, and conventions across sessions
 - **SDD Workflow** — Spec-Driven Development: plan before you code
 - **Professional Skills** — Coding patterns for React, TypeScript, Tailwind, testing, and more
 - **MCP Servers** — Context7 for up-to-date documentation
 - **Teaching-First Persona** — An architectural mentor that explains the "why" before the "what"
-- **Automated Review with GGA** — Guardian Angel reviews every commit
+- **Optional AI review with GGA** — enable the project hook explicitly
 
 ---
 
@@ -53,9 +47,9 @@
 | **One-Click Setup**         | Single command installs the complete ecosystem    |
 | **Cross-Platform**          | Works on macOS, Linux, and Windows                |
 | **Multi-Agent Support**     | OpenCode, Claude Code, Cursor, Gemini CLI, VSCode |
-| **Persistent Learning**     | Remembers your preferences and project patterns   |
+| **Persistent Memory**       | Stores project context and decisions through Engram   |
 | **Spec-Driven Development** | Structured planning and implementation workflow   |
-| **Automated Code Review**   | GGA checks code quality on every commit           |
+| **Automated Code Review**   | GGA can review commits after you explicitly enable its project hook           |
 | **Context7 Integration**    | Real-time documentation and examples              |
 | **Extensible Skills**       | Modular skills system for custom workflows        |
 
@@ -65,7 +59,7 @@
 
 ### Prerequisites
 
-- Go 1.21 or later
+- Go 1.24 or later
 - Git
 - One of: OpenCode, Claude Code, Cursor, Gemini CLI, or VSCode
 
@@ -76,8 +70,7 @@
 git clone https://github.com/zabadev/agent-ai.git
 cd agent-ai
 
-# Build and install
-make build
+# Build and install into GOBIN (or GOPATH/bin)
 make install
 
 # Or install directly
@@ -264,10 +257,12 @@ zabadev restore backup-2024-01-15-14-30-00
 ## Documentation
 
 - [Architecture Overview](docs/architecture.md)
-- [SDD Workflow Guide](docs/sdd-workflow.md)
-- [Agent Configuration](docs/agent-config.md)
-- [Skills Development](docs/skills.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [Usage and SDD workflow](docs/usage.md)
+- [Supported agents](docs/agents.md)
+- [Components and skills](docs/components.md)
+- [Security model](docs/security-model.md)
+- [Agent evaluations](docs/agent-evaluations.md)
+- [Troubleshooting and platforms](docs/platforms.md)
 
 ---
 

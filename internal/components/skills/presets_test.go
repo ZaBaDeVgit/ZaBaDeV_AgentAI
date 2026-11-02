@@ -25,6 +25,7 @@ func TestSkillsForPresetEcosystemIncludesFrameworks(t *testing.T) {
 	hasGoTesting := false
 	hasSkillCreator := false
 	hasSDDInit := false
+	hasProjectEngineering := false
 	for _, skill := range skills {
 		if skill == model.SkillGoTesting {
 			hasGoTesting = true
@@ -34,6 +35,9 @@ func TestSkillsForPresetEcosystemIncludesFrameworks(t *testing.T) {
 		}
 		if skill == model.SkillSDDInit {
 			hasSDDInit = true
+		}
+		if skill == model.SkillProjectEngineering {
+			hasProjectEngineering = true
 		}
 	}
 
@@ -45,6 +49,9 @@ func TestSkillsForPresetEcosystemIncludesFrameworks(t *testing.T) {
 	}
 	if !hasSkillCreator {
 		t.Fatalf("ecosystem preset should include skill-creator")
+	}
+	if !hasProjectEngineering {
+		t.Fatalf("ecosystem preset should include project-engineering")
 	}
 }
 
@@ -71,6 +78,7 @@ func TestAllSkillIDsIncludesEveryKnownSkill(t *testing.T) {
 		model.SkillSDDInit,
 		model.SkillGoTesting,
 		model.SkillCreator,
+		model.SkillProjectEngineering,
 	}
 
 	skillSet := make(map[model.SkillID]struct{}, len(all))

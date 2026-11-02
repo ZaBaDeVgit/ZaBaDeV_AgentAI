@@ -12,13 +12,13 @@ const (
 )
 
 // SupportTier indicates how fully an agent supports the ZaBaDeV ecosystem.
-// All current agents receive the full SDD orchestrator, skill files, MCP config,
-// and system prompt injection. The tier is kept as metadata for display purposes.
+// This tier describes the installer configuration surface, not guaranteed runtime
+// behavior of third-party agents or model providers.
 type SupportTier string
 
 const (
-	// TierFull — the agent receives all ecosystem features: SDD orchestrator,
-	// skill files, MCP servers, system prompt, and sub-agent delegation.
+	// TierFull — the adapter supports the ecosystem injection targets. Actual
+	// runtime support depends on the third-party agent and installed components.
 	TierFull SupportTier = "full"
 )
 
@@ -38,29 +38,30 @@ const (
 type SkillID string
 
 const (
-	SkillSDDInit    SkillID = "sdd-init"
-	SkillSDDNew     SkillID = "sdd-new"
-	SkillSDDApply   SkillID = "sdd-apply"
-	SkillSDDVerify  SkillID = "sdd-verify"
-	SkillSDDExplore SkillID = "sdd-explore"
-	SkillSDDPropose SkillID = "sdd-propose"
-	SkillSDDSpec    SkillID = "sdd-spec"
-	SkillSDDDesign  SkillID = "sdd-design"
-	SkillSDDTasks   SkillID = "sdd-tasks"
-	SkillSDDArchive SkillID = "sdd-archive"
-	SkillReact19    SkillID = "react-19"
-	SkillNextJS15   SkillID = "nextjs-15"
-	SkillTailwind4  SkillID = "tailwind-4"
-	SkillZustand5   SkillID = "zustand-5"
-	SkillZod4       SkillID = "zod-4"
-	SkillAISDK5     SkillID = "ai-sdk-5"
-	SkillPlaywright SkillID = "playwright"
-	SkillPytest     SkillID = "pytest"
-	SkillDjangoDRF  SkillID = "django-drf"
-	SkillGoTesting  SkillID = "go-testing"
-	SkillCreator    SkillID = "skill-creator"
-	SkillPinokio    SkillID = "pinokio"
-	SkillGepeto     SkillID = "gepeto"
+	SkillSDDInit            SkillID = "sdd-init"
+	SkillSDDNew             SkillID = "sdd-new"
+	SkillSDDApply           SkillID = "sdd-apply"
+	SkillSDDVerify          SkillID = "sdd-verify"
+	SkillSDDExplore         SkillID = "sdd-explore"
+	SkillSDDPropose         SkillID = "sdd-propose"
+	SkillSDDSpec            SkillID = "sdd-spec"
+	SkillSDDDesign          SkillID = "sdd-design"
+	SkillSDDTasks           SkillID = "sdd-tasks"
+	SkillSDDArchive         SkillID = "sdd-archive"
+	SkillReact19            SkillID = "react-19"
+	SkillNextJS15           SkillID = "nextjs-15"
+	SkillTailwind4          SkillID = "tailwind-4"
+	SkillZustand5           SkillID = "zustand-5"
+	SkillZod4               SkillID = "zod-4"
+	SkillAISDK5             SkillID = "ai-sdk-5"
+	SkillPlaywright         SkillID = "playwright"
+	SkillPytest             SkillID = "pytest"
+	SkillDjangoDRF          SkillID = "django-drf"
+	SkillGoTesting          SkillID = "go-testing"
+	SkillCreator            SkillID = "skill-creator"
+	SkillPinokio            SkillID = "pinokio"
+	SkillGepeto             SkillID = "gepeto"
+	SkillProjectEngineering SkillID = "project-engineering"
 )
 
 type PersonaID string

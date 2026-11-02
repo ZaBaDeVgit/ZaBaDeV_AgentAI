@@ -12,7 +12,7 @@
 | Cursor | `cursor` | Yes | Yes | Yes | No | No | `~/.cursor` |
 | VS Code Copilot | `vscode-copilot` | Yes | Yes | Yes | No | No | `~/.copilot` + VS Code User profile |
 
-All agents receive the **full SDD orchestrator** (agent-teams-lite) injected into their system prompt, plus skill files written to their skills directory. Every agent supports sub-agent delegation natively, enabling the full SDD orchestration workflow with parallel sub-agents.
+Agent capabilities differ by product and version. ZaBaDeV writes the available instructions, skills and configuration for each adapter; it cannot guarantee that a third-party agent loaded them or that delegation is enabled. For OpenCode, multi-agent delegation depends on the installed background-agents plugin and its runtime dependencies. Verify behavior in the actual agent after installation.
 
 ## Notes
 

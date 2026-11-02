@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -822,7 +823,89 @@ func runPostApplyVerification(homeDir string, selection model.Selection, resolve
 		checks = append(checks, engramHealthChecks()...)
 	}
 
+	if selection.HasAgent(model.AgentOpenCode) && len(resolved.OrderedComponents) > 0 {
+		for _, adapter := range adapters {
+			if adapter.Agent() != model.AgentOpenCode {
+				continue
+			}
+			settingsPath := adapter.SettingsPath(homeDir)
+			components := append([]model.ComponentID(nil), resolved.OrderedComponents...)
+			checks = append(checks, verify.Check{
+				ID:          "verify:opencode:config",
+				Description: "OpenCode settings are valid and selected features are configured",
+				Run: func(context.Context) error {
+					return verifyOpenCodeConfig(settingsPath, homeDir, components, selection.Persona)
+				},
+			})
+			break
+		}
+	}
+
 	return verify.BuildReport(verify.RunChecks(context.Background(), checks))
+}
+
+func verifyOpenCodeConfig(settingsPath, homeDir string, components []model.ComponentID, personaID model.PersonaID) error {
+	content, err := os.ReadFile(settingsPath)
+	if err != nil {
+		return fmt.Errorf("read OpenCode settings: %w", err)
+	}
+	var config map[string]any
+	if err := json.Unmarshal(content, &config); err != nil {
+		return fmt.Errorf("parse OpenCode settings JSON: %w", err)
+	}
+
+	if hasComponent(components, model.ComponentPersona) && personaID != model.PersonaCustom {
+		agents, ok := config["agent"].(map[string]any)
+		if !ok {
+			return fmt.Errorf("OpenCode settings do not define an agent map")
+		}
+		senior, ok := agents["senior-zabadev"].(map[string]any)
+		if !ok || senior["prompt"] != "{file:./AGENTS.md}" {
+			return fmt.Errorf("senior-zabadev agent is missing or does not load AGENTS.md")
+		}
+		if _, err := os.Stat(filepath.Join(homeDir, ".config", "opencode", "AGENTS.md")); err != nil {
+			return fmt.Errorf("OpenCode agent instructions are unavailable: %w", err)
+		}
+	}
+
+	if hasComponent(components, model.ComponentPermission) {
+		permission, ok := config["permission"].(map[string]any)
+		if !ok {
+			return fmt.Errorf("OpenCode permission policy is missing")
+		}
+		bash, ok := permission["bash"].(map[string]any)
+		if !ok || bash["*"] != "ask" {
+			return fmt.Errorf("OpenCode shell commands are not configured to require approval")
+		}
+	}
+
+	if hasComponent(components, model.ComponentEngram) || hasComponent(components, model.ComponentContext7) {
+		servers, ok := config["mcp"].(map[string]any)
+		if !ok {
+			return fmt.Errorf("OpenCode MCP configuration is missing")
+		}
+		if hasComponent(components, model.ComponentEngram) {
+			server, ok := servers["engram"].(map[string]any)
+			if !ok || server["enabled"] != true {
+				return fmt.Errorf("Engram MCP server is not enabled")
+			}
+		}
+		if hasComponent(components, model.ComponentContext7) {
+			server, ok := servers["context7"].(map[string]any)
+			if !ok || server["enabled"] != true {
+				return fmt.Errorf("Context7 MCP server is not enabled")
+			}
+		}
+	}
+
+	if hasComponent(components, model.ComponentSDD) {
+		pluginPath := filepath.Join(homeDir, ".config", "opencode", "plugins", "background-agents.ts")
+		if _, err := os.Stat(pluginPath); err != nil {
+			return fmt.Errorf("OpenCode background-agents plugin is unavailable: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func hasComponent(components []model.ComponentID, target model.ComponentID) bool {

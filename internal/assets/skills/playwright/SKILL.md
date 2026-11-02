@@ -91,23 +91,11 @@ await page.getByTestId('submit-button');
 await page.locator('.btn-primary').click();
 ```
 
-### Pattern 3: MCP Workflow for AI Testing
+### Pattern 3: Use the project's actual browser setup
 
-Use MCP server for AI-assisted test generation:
+Run the Playwright version and scripts declared by the project. Do not invent an MCP integration or add placeholder `launchOptions`; Playwright tests run through `@playwright/test` unless a real, documented integration is already configured.
 
-```typescript
-// playwright.config.ts
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  use: {
-    // AI test generation via MCP
-    launchOptions: {
-      // Setup MCP connection
-    },
-  },
-});
-```
+For UI changes, verify the changed user journey in a real browser when the project already has browser tooling and browsers installed. Check visible behavior, navigation, console errors, and relevant network failures. Do not install Playwright or download browsers without the user's approval. If browser verification is unavailable, state that explicitly and report which non-browser checks did run.
 
 ### Pattern 4: Visual Regression Testing
 
