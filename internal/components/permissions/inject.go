@@ -1,6 +1,7 @@
 package permissions
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -14,36 +15,35 @@ type InjectionResult struct {
 	Files   []string
 }
 
-// claudeCodeOverlayJSON sets Claude Code to bypassPermissions mode (auto-accept all).
-// Valid modes: "acceptEdits", "bypassPermissions", "default", "dontAsk", "plan".
+// Permission overlays intentionally keep execution approval enabled by default.
+// Tool-level secret denials add defense in depth; they do not sandbox shell access.
 var claudeCodeOverlayJSON = []byte(`{
   "permissions": {
-    "defaultMode": "bypassPermissions",
+    "defaultMode": "default",
     "deny": [
-      "Bash(rm -rf /)",
-      "Bash(sudo rm -rf /)",
-      "Bash(rm -rf ~)",
-      "Bash(sudo rm -rf ~)",
       "Read(.env)",
       "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/secrets/**)",
+      "Read(**/credentials.json)",
       "Edit(.env)",
-      "Edit(.env.*)"
+      "Edit(.env.*)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/secrets/**)",
+      "Edit(**/credentials.json)"
     ]
   }
 }
 `)
 
-// openCodeOverlayJSON uses the OpenCode "permission" key with bash/read granularity.
+// OpenCode asks before every shell command. Secret-path denials are defense in
+// depth only: users should still use OS-level sandboxing for untrusted code.
 var openCodeOverlayJSON = []byte(`{
   "permission": {
     "bash": {
-      "*": "allow",
-      "git commit *": "ask",
-      "git push *": "ask",
-      "git push": "ask",
-      "git push --force *": "ask",
-      "git rebase *": "ask",
-      "git reset --hard *": "ask"
+      "*": "ask"
     },
     "read": {
       "*": "allow",
@@ -51,24 +51,36 @@ var openCodeOverlayJSON = []byte(`{
       "*.env.*": "deny",
       "**/.env": "deny",
       "**/.env.*": "deny",
+      "**/.envrc": "deny",
+      "**/.npmrc": "deny",
       "**/secrets/**": "deny",
-      "**/credentials.json": "deny"
+      "**/credentials.json": "deny",
+      "**/*private*key*": "deny"
+    },
+    "edit": {
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/.envrc": "deny",
+      "**/.npmrc": "deny",
+      "**/secrets/**": "deny",
+      "**/credentials.json": "deny",
+      "**/*private*key*": "deny"
     }
   }
 }
 `)
 
-// geminiCLIOverlayJSON sets Gemini CLI to "auto_edit" mode (auto-approve edit tools).
 var geminiCLIOverlayJSON = []byte(`{
   "general": {
-    "defaultApprovalMode": "auto_edit"
+    "defaultApprovalMode": "default"
   }
 }
 `)
 
-// vscodeCopilotOverlayJSON enables auto-approve for VS Code Copilot chat tools.
 var vscodeCopilotOverlayJSON = []byte(`{
-  "chat.tools.autoApprove": true
+  "chat.tools.autoApprove": false
 }
 `)
 
@@ -106,7 +118,7 @@ func Inject(homeDir string, adapter agents.Adapter) (InjectionResult, error) {
 		return InjectionResult{}, nil
 	}
 
-	writeResult, err := mergeJSONFile(settingsPath, overlay)
+	writeResult, err := mergeJSONFile(settingsPath, overlay, adapter.Agent())
 	if err != nil {
 		return InjectionResult{}, err
 	}
@@ -114,7 +126,7 @@ func Inject(homeDir string, adapter agents.Adapter) (InjectionResult, error) {
 	return InjectionResult{Changed: writeResult.Changed, Files: []string{settingsPath}}, nil
 }
 
-func mergeJSONFile(path string, overlay []byte) (filemerge.WriteResult, error) {
+func mergeJSONFile(path string, overlay []byte, agent model.AgentID) (filemerge.WriteResult, error) {
 	baseJSON, err := osReadFile(path)
 	if err != nil {
 		return filemerge.WriteResult{}, err
@@ -124,8 +136,55 @@ func mergeJSONFile(path string, overlay []byte) (filemerge.WriteResult, error) {
 	if err != nil {
 		return filemerge.WriteResult{}, err
 	}
+	if agent == model.AgentClaudeCode {
+		merged, err = preserveClaudeDenyRules(baseJSON, merged)
+		if err != nil {
+			return filemerge.WriteResult{}, err
+		}
+	}
 
 	return filemerge.WriteFileAtomic(path, merged, 0o644)
+}
+
+// preserveClaudeDenyRules unions our managed secret-path denials with user
+// rules; replacing this array would silently remove custom protections.
+func preserveClaudeDenyRules(existing, merged []byte) ([]byte, error) {
+	if len(existing) == 0 {
+		return merged, nil
+	}
+	var existingRoot, mergedRoot map[string]any
+	if err := json.Unmarshal(existing, &existingRoot); err != nil {
+		return nil, fmt.Errorf("parse existing Claude settings: %w", err)
+	}
+	if err := json.Unmarshal(merged, &mergedRoot); err != nil {
+		return nil, fmt.Errorf("parse merged Claude settings: %w", err)
+	}
+	existingPermissions, _ := existingRoot["permissions"].(map[string]any)
+	mergedPermissions, _ := mergedRoot["permissions"].(map[string]any)
+	if existingPermissions == nil || mergedPermissions == nil {
+		return merged, nil
+	}
+	oldRules, _ := existingPermissions["deny"].([]any)
+	managedRules, _ := mergedPermissions["deny"].([]any)
+	seen := make(map[string]struct{}, len(oldRules)+len(managedRules))
+	rules := make([]any, 0, len(oldRules)+len(managedRules))
+	for _, rule := range append(oldRules, managedRules...) {
+		text, ok := rule.(string)
+		if !ok {
+			continue
+		}
+		if _, exists := seen[text]; exists {
+			continue
+		}
+		seen[text] = struct{}{}
+		rules = append(rules, text)
+	}
+	mergedPermissions["deny"] = rules
+	result, err := json.MarshalIndent(mergedRoot, "", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("marshal merged Claude settings: %w", err)
+	}
+	return append(result, '\n'), nil
 }
 
 var osReadFile = func(path string) ([]byte, error) {

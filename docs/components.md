@@ -34,7 +34,7 @@ gga install
 
 ## Skills
 
-11 curated skill files organized by category, injected into your agent's configuration:
+Curated skill files organized by category, injected into your agent's configuration:
 
 ### SDD (Spec-Driven Development)
 
@@ -56,6 +56,7 @@ gga install
 |-------|-----|-------------|
 | Go Testing | `go-testing` | Go testing patterns including Bubbletea TUI testing |
 | Skill Creator | `skill-creator` | Create new AI agent skills following the Agent Skills spec |
+| Project Engineering | `project-engineering` | Identify unfamiliar project stacks and implement, test and verify complete features |
 
 These foundation skills are installed by default with both `full-gentleman` and `ecosystem-only` presets.
 

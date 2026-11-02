@@ -31,6 +31,7 @@ var foundationSkills = []model.SkillID{
 	model.SkillPinokio,
 	model.SkillGepeto,
 	model.SkillSDDNew,
+	model.SkillProjectEngineering,
 }
 
 // SkillsForPreset returns which skills should be installed for a given preset.

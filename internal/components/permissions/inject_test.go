@@ -65,6 +65,25 @@ func TestInjectOpenCodeIsIdempotent(t *testing.T) {
 	if !strings.Contains(text, `"read"`) {
 		t.Fatal("opencode.json permission missing read section")
 	}
+	var config map[string]any
+	if err := json.Unmarshal(content, &config); err != nil {
+		t.Fatalf("unmarshal OpenCode config: %v", err)
+	}
+	permission := config["permission"].(map[string]any)
+	bash := permission["bash"].(map[string]any)
+	if bash["*"] != "ask" {
+		t.Fatalf("bash wildcard permission = %v, want ask", bash["*"])
+	}
+	read := permission["read"].(map[string]any)
+	edit := permission["edit"].(map[string]any)
+	for _, pattern := range []string{"**/.env", "**/.env.*", "**/secrets/**", "**/credentials.json"} {
+		if read[pattern] != "deny" {
+			t.Errorf("read[%q] = %v, want deny", pattern, read[pattern])
+		}
+		if edit[pattern] != "deny" {
+			t.Errorf("edit[%q] = %v, want deny", pattern, edit[pattern])
+		}
+	}
 }
 
 func TestInjectAddsEnvToDenyList(t *testing.T) {
@@ -104,7 +123,7 @@ func TestInjectAddsEnvToDenyList(t *testing.T) {
 	t.Fatalf("deny list missing explicit .env rule: %#v", denyList)
 }
 
-func TestInjectClaudeCodeUsesBypassPermissions(t *testing.T) {
+func TestInjectClaudeCodeKeepsDefaultApprovalMode(t *testing.T) {
 	home := t.TempDir()
 
 	if _, err := Inject(home, claudeAdapter()); err != nil {
@@ -128,12 +147,12 @@ func TestInjectClaudeCodeUsesBypassPermissions(t *testing.T) {
 	}
 
 	mode, ok := perms["defaultMode"].(string)
-	if !ok || mode != "bypassPermissions" {
-		t.Fatalf("expected defaultMode=bypassPermissions, got %q", mode)
+	if !ok || mode != "default" {
+		t.Fatalf("expected defaultMode=default, got %q", mode)
 	}
 }
 
-func TestInjectGeminiCLIUsesAutoEditMode(t *testing.T) {
+func TestInjectGeminiCLIUsesDefaultApprovalMode(t *testing.T) {
 	home := t.TempDir()
 
 	result, err := Inject(home, geminiAdapter())
@@ -161,8 +180,8 @@ func TestInjectGeminiCLIUsesAutoEditMode(t *testing.T) {
 	}
 
 	mode, ok := general["defaultApprovalMode"].(string)
-	if !ok || mode != "auto_edit" {
-		t.Fatalf("expected defaultApprovalMode=auto_edit, got %q", mode)
+	if !ok || mode != "default" {
+		t.Fatalf("expected defaultApprovalMode=default, got %q", mode)
 	}
 
 	// Ensure no Claude Code keys leaked
@@ -171,7 +190,7 @@ func TestInjectGeminiCLIUsesAutoEditMode(t *testing.T) {
 	}
 }
 
-func TestInjectVSCodeCopilotUsesAutoApprove(t *testing.T) {
+func TestInjectVSCodeCopilotDoesNotAutoApprove(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 
@@ -196,8 +215,8 @@ func TestInjectVSCodeCopilotUsesAutoApprove(t *testing.T) {
 	}
 
 	autoApprove, ok := settings["chat.tools.autoApprove"].(bool)
-	if !ok || !autoApprove {
-		t.Fatalf("expected chat.tools.autoApprove=true, got %v", settings["chat.tools.autoApprove"])
+	if !ok || autoApprove {
+		t.Fatalf("expected chat.tools.autoApprove=false, got %v", settings["chat.tools.autoApprove"])
 	}
 
 	// Ensure no Claude Code keys leaked
@@ -247,8 +266,8 @@ func TestInjectVSCodeCopilotMergesIntoJSONCSettings(t *testing.T) {
 	}
 
 	autoApprove, ok := settings["chat.tools.autoApprove"].(bool)
-	if !ok || !autoApprove {
-		t.Fatalf("expected chat.tools.autoApprove=true, got %v", settings["chat.tools.autoApprove"])
+	if !ok || autoApprove {
+		t.Fatalf("expected chat.tools.autoApprove=false, got %v", settings["chat.tools.autoApprove"])
 	}
 
 	if settings["editor.formatOnSave"] != true {

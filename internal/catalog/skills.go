@@ -36,6 +36,7 @@ var mvpSkills = []Skill{
 	{ID: model.SkillDjangoDRF, Name: "django-drf", Category: "backend", Priority: "p0"},
 	// Workflow/Builder skills
 	{ID: model.SkillCreator, Name: "skill-creator", Category: "workflow", Priority: "p0"},
+	{ID: model.SkillProjectEngineering, Name: "project-engineering", Category: "workflow", Priority: "p0"},
 }
 
 func MVPSkills() []Skill {

@@ -8,6 +8,10 @@
 # Test binary
 *.test
 
+# Python evaluation fixtures
+__pycache__/
+*.py[cod]
+
 # Output of go coverage
 *.out
 

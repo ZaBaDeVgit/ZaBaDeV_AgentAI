@@ -24,7 +24,8 @@
       "django-drf",
       "pinokio",
       "gepeto",
-      "sdd-new"
+      "sdd-new",
+      "project-engineering"
     ]
   },
   {
@@ -52,7 +53,8 @@
       "django-drf",
       "pinokio",
       "gepeto",
-      "sdd-new"
+      "sdd-new",
+      "project-engineering"
     ]
   },
   {
